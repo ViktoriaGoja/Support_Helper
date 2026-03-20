@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TNS SUPPORT Helper</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#F5F4F0;color:#3B3B3B;-webkit-font-smoothing:antialiased;}
+#app{max-width:580px;margin:0 auto;min-height:100vh;}
+.screen{display:none;}.screen.active{display:block;}
+.app-hdr{background:#3B3B3B;padding:16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;}
+.app-hdr-icon{width:42px;height:42px;border-radius:10px;background:#F58A21;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.app-hdr-title{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.01em;}
+.app-hdr-sub{font-size:12px;color:#aaa;margin-top:2px;}
+.sec-hdr{background:#3B3B3B;padding:13px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
+.back-btn{background:transparent;border:none;color:#F58A21;font-size:14px;font-weight:700;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif;flex-shrink:0;}
+.sec-title{font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.06em;}
+.search-wrap{padding:14px 14px 8px;}
+.search-box{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #ddd;border-radius:12px;padding:11px 14px;transition:border-color .15s;}
+.search-box:focus-within{border-color:#F58A21;box-shadow:0 0 0 3px rgba(245,138,33,.12);}
+.search-box input{flex:1;border:none;outline:none;font-size:15px;font-family:'DM Sans',sans-serif;color:#3B3B3B;background:transparent;}
+.search-box input::placeholder{color:#bbb;}
+.s-clear{background:none;border:none;cursor:pointer;color:#bbb;font-size:20px;line-height:1;padding:0;display:none;}
+.s-clear.vis{display:block;}
+.s-results{padding:2px 14px 8px;}
+.r-item{display:flex;align-items:center;gap:10px;background:#fff;border:0.5px solid #eee;border-left:3px solid #F58A21;border-radius:8px;padding:11px 13px;margin-bottom:7px;cursor:pointer;}
+.r-item.r-ma{border-left-color:#29A3BD;}.r-item.r-dark{border-left-color:#3B3B3B;}
+.r-item:hover{border-color:#ddd;border-left-width:3px;}
+.r-label{font-size:14px;font-weight:600;color:#3B3B3B;}.r-sub{font-size:12px;color:#666;margin-top:2px;}
+.no-results{font-size:14px;color:#888;text-align:center;padding:20px 0;}
+.home-body{padding:10px 14px 0;}.state-block{margin-bottom:10px;}
+.state-trigger{width:100%;display:flex;align-items:center;gap:12px;background:#fff;border:0.5px solid #eee;border-left:4px solid #F58A21;border-radius:12px;padding:13px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;}
+.state-trigger.ma{border-left-color:#29A3BD;}.state-trigger:hover{border-color:#ddd;border-left-width:4px;}
+.st-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.st-name{font-size:16px;font-weight:700;color:#3B3B3B;}.st-hint{font-size:12px;color:#666;margin-top:2px;}
+.st-chev{font-size:16px;color:#aaa;transition:transform .22s ease;flex-shrink:0;}.st-chev.open{transform:rotate(180deg);}
+.acc-panel{overflow:hidden;max-height:0;opacity:0;transition:max-height .28s ease,opacity .22s ease;}.acc-panel.open{max-height:700px;opacity:1;}
+.panel-cards{padding:8px 0 2px;}
+.nav-card{display:flex;align-items:center;gap:12px;background:#fff;border:0.5px solid #eee;border-left:3px solid #F58A21;border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;width:100%;}
+.nav-card.ma{border-left-color:#29A3BD;}.nav-card:hover{border-color:#ddd;border-left-width:3px;}.nav-card:active{opacity:.85;}
+.nc-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nc-label{font-size:14px;font-weight:600;color:#3B3B3B;}.nc-sub{font-size:12px;color:#666;margin-top:2px;}
+.nc-arrow{font-size:16px;color:#bbb;flex-shrink:0;margin-left:auto;}
+.gen-label{display:flex;align-items:center;gap:7px;margin-bottom:10px;margin-top:2px;}
+.gen-dot{width:7px;height:7px;border-radius:50%;background:#3B3B3B;flex-shrink:0;}
+.gen-lbl{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.09em;}
+.gen-card{display:flex;align-items:center;gap:12px;background:#fff;border:0.5px solid #eee;border-left:3px solid #3B3B3B;border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;width:100%;}
+.gen-card:hover{border-color:#ddd;border-left-width:3px;}
+.content-body{padding:1rem;}
+.dl{display:flex;align-items:center;gap:8px;margin-bottom:12px;margin-top:4px;}
+.dl span{font-size:10px;font-weight:700;color:#888;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;}
+.dl::before,.dl::after{content:'';flex:1;height:1px;background:#ddd;}
+.card{border-radius:10px;border:1px solid #ddd;overflow:hidden;margin-bottom:10px;background:#fff;}
+.ch{background:#3B3B3B;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:8px;}
+.ct{font-size:12px;font-weight:700;color:#fff;letter-spacing:.02em;flex:1;}
+.cp{font-size:12px;font-weight:700;color:#F58A21;white-space:nowrap;}.cpb{font-size:12px;font-weight:700;color:#29A3BD;white-space:nowrap;}
+.cb{padding:12px 14px;background:#fff;font-size:13px;color:#3B3B3B;line-height:1.6;}
+.hidden{display:none!important;}
+.bul{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#3B3B3B;margin-bottom:8px;}.bul:last-child{margin-bottom:0;}
+.ck{color:#F58A21;flex-shrink:0;font-size:14px;line-height:1.4;}.ckb{color:#29A3BD;flex-shrink:0;font-size:14px;line-height:1.4;}.ckr{color:#E24B4A;flex-shrink:0;font-size:14px;line-height:1.4;}
+.kv{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #f5f5f5;font-size:13px;}.kv:last-child{border-bottom:none;padding-bottom:0;}
+.kvk{color:#888;flex-shrink:0;max-width:50%;}.kvv{font-weight:600;text-align:right;}
+.co{border-radius:8px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px;font-size:12px;margin-top:8px;}
+.co-o{background:#FFFAF4;border:1px solid #F58A21;}.co-b{background:#F0F8FB;border:1px solid #29A3BD;}
+.co-r{background:#FFF5F5;border:1px solid #E24B4A;}.co-g{background:#F4FBF0;border:1px solid #73BF45;}
+.badge-o{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;background:#FEF3E4;color:#C46D10;border:1px solid #F58A21;border-radius:99px;padding:2px 8px;margin-bottom:12px;}
+.badge-b{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;background:#E0F4FA;color:#1A7A96;border:1px solid #29A3BD;border-radius:99px;padding:2px 8px;margin-bottom:12px;}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-right:4px;margin-bottom:6px;}
+.tag-teen{background:#FEF3E4;color:#C46D10;}.tag-adult{background:#E0F4FA;color:#1A7A96;}.tag-both{background:#F0F0F0;color:#555;}
+.pr{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #f5f5f5;font-size:13px;}.pr:last-child{border-bottom:none;}
+.pr-hl{background:#F0F8FB;}
+.sub-lbl{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin:10px 0 6px;}
+.field-lbl{font-size:11px;font-weight:700;color:#3B3B3B;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;display:block;}
+input[type=date]{width:100%;border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;font-family:'DM Sans',sans-serif;color:#3B3B3B;outline:none;background:#fff;}
+input[type=date]:focus{border-color:#F58A21;}
+input[type=number]{width:100%;border:1px solid #ddd;border-radius:8px;padding:10px 12px 10px 26px;font-size:14px;font-family:'DM Sans',sans-serif;color:#3B3B3B;outline:none;background:#fff;}
+input[type=number]:focus{border-color:#F58A21;}
+.seg{display:flex;gap:10px;}
+.seg-btn{flex:1;text-align:center;padding:10px;border-radius:8px;border:1px solid #ddd;background:transparent;color:#888;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.seg-btn.ao{border:2px solid #F58A21;background:#FEF3E4;color:#C46D10;font-weight:700;}
+.seg-btn.ab{border:2px solid #29A3BD;background:#E0F4FA;color:#1A7A96;font-weight:700;}
+.tab-bar{display:flex;border:1px solid #ddd;border-radius:10px;overflow:hidden;margin-bottom:12px;}
+.tab-btn{flex:1;min-width:60px;text-align:center;padding:9px 4px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:#888;border-left:1px solid #ddd;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.tab-btn:first-child{border-left:none;}.tab-btn.active{background:#3B3B3B;color:#fff;font-weight:700;}
+.fee-tabs{display:flex;border-bottom:1px solid #eee;}
+.fee-tab{flex:1;text-align:center;padding:8px;font-size:12px;cursor:pointer;background:transparent;color:#888;border-right:1px solid #eee;font-family:'DM Sans',sans-serif;}
+.fee-tab:last-child{border-right:none;}.fee-tab.active{background:#FEF3E4;color:#C46D10;font-weight:700;}
+.loc-card{background:#fff;border:0.5px solid #eee;border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;}
+.loc-card.test-loc{border-color:#F58A21;border-left:4px solid #F58A21;}
+.loc-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.loc-name{font-size:13px;font-weight:700;color:#3B3B3B;}.loc-addr{font-size:12px;color:#888;margin-top:2px;line-height:1.4;}
+.tag-test{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:5px;background:#FEF3E4;color:#C46D10;border:1px solid #F58A21;}
+.loc-type-full{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:4px;background:#E0F4FA;color:#1A7A96;}
+.loc-type-pickup{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:4px;background:#F0F0F0;color:#666;}
+.loc-dist{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;margin-left:auto;flex-shrink:0;white-space:nowrap;align-self:flex-start;}
+.zip-box{background:#fff;border:1px solid #ddd;border-radius:12px;padding:14px;margin-bottom:14px;}
+.zip-row{display:flex;gap:8px;}
+.zip-in{flex:1;border:2px solid #ddd;border-radius:8px;padding:10px 12px;font-size:15px;font-family:'DM Sans',sans-serif;color:#3B3B3B;outline:none;}
+.zip-in:focus{border-color:#F58A21;}.zip-in-b:focus{border-color:#29A3BD;}
+.zip-btn-o{background:#F58A21;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.zip-btn-b{background:#29A3BD;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.loc-legend{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #eee;border-radius:8px;padding:10px 12px;margin-bottom:12px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#555;}
+.elig-card{border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:10px;}
+.stat-row{display:flex;gap:10px;margin-bottom:10px;}
+.stat-box{flex:1;background:#F0EFE9;border-radius:8px;padding:10px 14px;}
+.stat-lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
+.stat-val{font-size:18px;font-weight:700;color:#3B3B3B;}
+.terms-seg{display:flex;gap:0;background:#fff;border:1.5px solid #ddd;border-radius:10px;overflow:hidden;margin-bottom:1.25rem;}
+.terms-seg-btn{flex:1;text-align:center;padding:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;background:transparent;color:#888;}
+.terms-seg-btn.ao{background:#F58A21;color:#fff;}.terms-seg-btn.ab{background:#29A3BD;color:#fff;}
+.refund-seg{display:flex;gap:0;background:#fff;border:1.5px solid #ddd;border-radius:10px;overflow:hidden;margin-bottom:1.1rem;}
+.refund-seg-btn{flex:1;text-align:center;padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;background:transparent;color:#888;}
+.refund-seg-btn.on{background:#F58A21;color:#fff;}
+.pmt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.pmt-btn{text-align:center;padding:10px 6px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#fff;color:#888;}
+.pmt-btn.on{border-color:#F58A21;background:#FEF3E4;color:#C46D10;}
+.calc-btn{width:100%;background:#F58A21;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;box-shadow:0 2px 0 #C46D10;}
+.calc-btn:active{transform:translateY(2px);box-shadow:none;}
+.res-card{border-radius:12px;padding:1.25rem;margin-top:1rem;}
+.res-card.eligible{background:#EDF7EE;border:2px solid #73BF45;}.res-card.ineligible{background:#FFF5F5;border:2px solid #E24B4A;}
+.res-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;margin-bottom:10px;}
+.res-badge.g{background:#73BF45;color:#fff;}.res-badge.r{background:#E24B4A;color:#fff;}
+.res-heading{font-size:24px;font-weight:700;color:#3B3B3B;margin-bottom:4px;}.res-sub{font-size:13px;font-weight:600;margin-bottom:10px;}
+.det-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:13px;}.det-row:last-child{border-bottom:none;padding-bottom:0;}
+.det-k{color:#888;}.det-v{font-weight:700;}
+.method-box{border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-top:10px;}
+.method-box.card-method{background:#E8F4FD;border:1px solid #29A3BD;}.method-box.check-method{background:#FFF8EC;border:1px solid #F58A21;}
+.method-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.method-title{font-size:13px;font-weight:700;color:#3B3B3B;margin-bottom:2px;}.method-sub{font-size:12px;color:#555;line-height:1.4;}
+.field-wrap{margin-bottom:1.1rem;}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <div class="app-hdr">
+    <div class="app-hdr-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div><div class="app-hdr-title">SUPPORT Helper</div><div class="app-hdr-sub">The Next Street — Internal Reference Tool</div></div>
+  </div>
+  <div class="search-wrap"><div class="search-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="11" cy="11" r="8" stroke="#bbb" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#bbb" stroke-width="2" stroke-linecap="round"/></svg><input type="text" id="s-in" placeholder="Search guides, services, policies…"/><button class="s-clear" id="s-clr">×</button></div></div>
+  <div id="s-res" style="display:none;" class="s-results"></div>
+  <div id="home-content" class="home-body">
+    <div class="state-block">
+      <button class="state-trigger ct" id="ct-trig" onclick="togAcc('ct')">
+        <div class="st-icon" style="background:#FEF3E4;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#F58A21" stroke-width="2"/><path d="M9 22V12h6v10" stroke="#F58A21" stroke-width="2"/></svg></div>
+        <div style="flex:1;"><div class="st-name">Connecticut</div><div class="st-hint">Permit, License, Services &amp; Locations</div></div>
+        <span class="st-chev" id="ct-chev">▾</span>
+      </button>
+      <div class="acc-panel" id="ct-panel"><div class="panel-cards">
+        <button class="nav-card ct" onclick="goTo('ct-permit')"><div class="nc-icon" style="background:#FEF3E4;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="2" stroke="#F58A21" stroke-width="2"/><path d="M9 7h6M9 11h6M9 15h4" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">CT Permit Guide</div><div class="nc-sub">Requirements &amp; Fees</div></div><span class="nc-arrow">›</span></button>
+        <button class="nav-card ct" onclick="goTo('ct-license')"><div class="nc-icon" style="background:#FEF3E4;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="#F58A21" stroke-width="2"/><circle cx="8" cy="12" r="2" stroke="#F58A21" stroke-width="2"/><path d="M13 10h4M13 14h3" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">CT License Guide</div><div class="nc-sub">Training &amp; Road Test</div></div><span class="nc-arrow">›</span></button>
+        <button class="nav-card ct" onclick="goTo('ct-services')"><div class="nc-icon" style="background:#FEF3E4;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/><path d="M2 12l10 5 10-5" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">CT Services</div><div class="nc-sub">Programs &amp; Pricing</div></div><span class="nc-arrow">›</span></button>
+        <button class="nav-card ct" onclick="goTo('ct-locations')"><div class="nc-icon" style="background:#FEF3E4;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-6.75-7-11a7 7 0 1114 0c0 4.25-7 11-7 11z" stroke="#F58A21" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="#F58A21" stroke-width="2"/></svg></div><div><div class="nc-label">CT Locations</div><div class="nc-sub">57 Locations &amp; Zip Search</div></div><span class="nc-arrow">›</span></button>
+      </div></div>
+    </div>
+    <div class="state-block">
+      <button class="state-trigger ma" id="ma-trig" onclick="togAcc('ma')">
+        <div class="st-icon" style="background:#E0F4FA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#29A3BD" stroke-width="2"/><path d="M9 22V12h6v10" stroke="#29A3BD" stroke-width="2"/></svg></div>
+        <div style="flex:1;"><div class="st-name">Massachusetts</div><div class="st-hint">Permit, License, Services &amp; Locations</div></div>
+        <span class="st-chev" id="ma-chev">▾</span>
+      </button>
+      <div class="acc-panel" id="ma-panel"><div class="panel-cards">
+        <button class="nav-card ma" onclick="goTo('ma-permit')"><div class="nc-icon" style="background:#E0F4FA;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="2" stroke="#29A3BD" stroke-width="2"/><path d="M9 7h6M9 11h6M9 15h4" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">MA Permit Guide</div><div class="nc-sub">Requirements &amp; Fees</div></div><span class="nc-arrow">›</span></button>
+        <button class="nav-card ma" onclick="goTo('ma-license')"><div class="nc-icon" style="background:#E0F4FA;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="#29A3BD" stroke-width="2"/><circle cx="8" cy="12" r="2" stroke="#29A3BD" stroke-width="2"/><path d="M13 10h4M13 14h3" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">MA License Guide</div><div class="nc-sub">JOL &amp; Road Test</div></div><span class="nc-arrow">›</span></button>
+        <button class="nav-card ma" onclick="goTo('ma-services')"><div class="nc-icon" style="background:#E0F4FA;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/><path d="M2 12l10 5 10-5" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">MA Services</div><div class="nc-sub">Programs &amp; Pricing</div></div><span class="nc-arrow">›</span></button>
+        <button class="nav-card ma" onclick="goTo('ma-locations')"><div class="nc-icon" style="background:#E0F4FA;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-6.75-7-11a7 7 0 1114 0c0 4.25-7 11-7 11z" stroke="#29A3BD" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="#29A3BD" stroke-width="2"/></svg></div><div><div class="nc-label">MA Locations</div><div class="nc-sub">14 Locations &amp; Zip Search</div></div><span class="nc-arrow">›</span></button>
+      </div></div>
+    </div>
+    <div>
+      <div class="gen-label"><div class="gen-dot"></div><span class="gen-lbl">General</span></div>
+      <button class="gen-card" onclick="goTo('eligibility')"><div class="nc-icon" style="background:#FEF3E4;border:1px solid #eee;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="13" width="4" height="8" rx="1" fill="#F58A21"/><rect x="10" y="8" width="4" height="13" rx="1" fill="#F58A21"/><rect x="17" y="3" width="4" height="18" rx="1" fill="#F58A21"/></svg></div><div><div class="nc-label">Eligibility Calculator</div><div class="nc-sub">CT &amp; MA Eligibility Dates</div></div><span class="nc-arrow">›</span></button>
+      <button class="gen-card" onclick="goTo('terms')"><div class="nc-icon" style="background:#F5F4F0;border:1px solid #eee;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">Terms &amp; Conditions</div><div class="nc-sub">CT &amp; MA Policies</div></div><span class="nc-arrow">›</span></button>
+      <button class="gen-card" onclick="goTo('refund')"><div class="nc-icon" style="background:#F5F4F0;border:1px solid #eee;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 109 9" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round"/><path d="M3 7v5h5" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v4l3 3" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">Refund Eligibility</div><div class="nc-sub">Calculate Refund &amp; Method</div></div><span class="nc-arrow">›</span></button>
+      <button class="gen-card" onclick="goTo('faq')"><div class="nc-icon" style="background:#F5F4F0;border:1px solid #eee;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#3B3B3B" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">FAQ</div><div class="nc-sub">Common Questions &amp; Answers</div></div><span class="nc-arrow">›</span></button>
+      <button class="gen-card" onclick="goTo('training')"><div class="nc-icon" style="background:#F5F4F0;border:1px solid #eee;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12l10 5 10-5" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17l10 5 10-5" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="nc-label">Agent Training</div><div class="nc-sub">Call Scripts &amp; Support Guidelines</div></div><span class="nc-arrow">›</span></button>
+    </div>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- CT PERMIT -->
+<div id="screen-ct-permit" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">CT Permit Guide</span></div>
+  <div class="content-body">
+    <span class="badge-o">Source: portal.ct.gov/dmv</span>
+    <div class="dl"><span>Step 1 — Before You Apply</span></div>
+    <div class="card"><div class="ch" onclick="togCard('ctp0')"><span class="ct">Connecticut Work Zone Safety Course</span><span id="ctp0-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctp0" class="hidden cb">
+      <div class="bul"><span class="ck">✓</span><span>All new CT drivers must complete the <strong>Connecticut Work Zone Safety Course</strong> before applying for a learner's permit — this is the very first step in the licensing process</span></div>
+      <div class="bul"><span class="ck">✓</span><span>The course covers safe driving through highway work zones and is required by CT state law</span></div>
+      <div class="bul"><span class="ck">✓</span><span>Available online — free of charge</span></div>
+      <div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;">Students must complete this <strong>before</strong> their DMV permit appointment. Proof of completion is required when applying for the learner's permit.</span></div>
+    </div></div>
+    <div class="dl"><span>Step 2 — Apply For Your Permit</span></div>
+    <div class="card"><div class="ch" onclick="togCard('ctp1')"><span class="ct">Teens — Age 16–17</span><span id="ctp1-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctp1" class="hidden cb">
+      <div class="bul"><span class="ck">✓</span><span>Minimum age: <strong>16 years old</strong></span></div>
+      <div class="bul"><span class="ck">✓</span><span>Parent/guardian present at appointment, or notarized <strong>Form 2-D (Certificate of Parental Consent)</strong></span></div>
+      <div class="bul"><span class="ck">✓</span><span>Bring completed <strong>Application for Non-Commercial Learner's Permit (Form R-229)</strong></span></div>
+      <div class="bul"><span class="ck">✓</span><span>Pass <strong>vision test</strong> and <strong>25-question knowledge test</strong> — need 20/25 to pass</span></div>
+      <div class="bul"><span class="ck">✓</span><span>Pay <strong>$40 testing fee</strong> + <strong>$19 learner's permit fee</strong></span></div>
+      <div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;"><strong>Appointment required.</strong> Schedule &amp; prepay online. Testing offices: Bridgeport, Cheshire, Danbury, Enfield, Hamden, Norwalk, Old Saybrook, Waterbury, Wethersfield, Willimantic.</span></div>
+    </div></div>
+    <div class="card"><div class="ch" onclick="togCard('ctp2')"><span class="ct">Adults — Age 18+</span><span id="ctp2-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctp2" class="hidden cb">
+      <div class="bul"><span class="ckb">✓</span><span>Apply for an <strong>Adult Instruction Permit</strong> at the DMV</span></div>
+      <div class="bul"><span class="ckb">✓</span><span>Pass vision test + 25-question knowledge test (20/25) — pay <strong>$40 testing fee + $19 permit fee</strong></span></div>
+      <div class="bul"><span class="ckb">✓</span><span>Must hold permit at least <strong>90 days</strong> before road test</span></div>
+    </div></div>
+    <div class="dl"><span>Permit Restrictions — Age 16–17</span></div>
+    <div class="card"><div class="ch" onclick="togCard('ctp3')"><span class="ct">Rules While On A Permit</span><span id="ctp3-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctp3" class="hidden cb">
+      <div class="kv"><span class="kvk">Passengers</span><span class="kvv">Parent, legal guardian, or qualified trainer only</span></div>
+      <div class="kv"><span class="kvk">Cell phones</span><span class="kvv">No use including hands-free</span></div>
+      <div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;"><strong>Qualified Trainer:</strong> Must be 20+, licensed 4+ years, no suspensions in past 4 years.</span></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- CT LICENSE -->
+<div id="screen-ct-license" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">CT License Guide</span></div>
+  <div class="content-body">
+    <span class="badge-o">Source: portal.ct.gov/dmv</span>
+    <div class="dl"><span>Training Paths — Teens Age 16–17</span></div>
+    <div class="card"><div class="ch" onclick="togCard('ctl1')"><span class="ct">Full Course — 120-Day Path</span><span id="ctl1-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctl1" class="hidden cb">
+      <div class="bul"><span class="ck">✓</span><span><strong>30 hours</strong> classroom + <strong>40 hours</strong> BTW + hold permit <strong>120 days</strong></span></div>
+      <div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;">TNS 30-Hour Full Driver Education course satisfies this classroom requirement.</span></div>
+    </div></div>
+    <div class="card"><div class="ch" onclick="togCard('ctl2')"><span class="ct">Home Training — 180-Day Path</span><span id="ctl2-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctl2" class="hidden cb">
+      <div class="bul"><span class="ck">✓</span><span><strong>22 hrs</strong> home training + <strong>8-hour safe driving course</strong> + <strong>40 hours</strong> BTW + <strong>180 days</strong> permit hold</span></div>
+      <div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;">TNS 8-Hour Safe Driving Course satisfies the commercial school component.</span></div>
+    </div></div>
+    <div class="card"><div class="ch" onclick="togCard('ctl3')"><span class="ct">Adults — Age 18+ (90-Day Path)</span><span id="ctl3-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctl3" class="hidden cb">
+      <div class="bul"><span class="ckb">✓</span><span>Hold permit at least <strong>90 days</strong> + complete <strong>8-hour safe driving course</strong></span></div>
+    </div></div>
+    <div class="dl"><span>Road Test</span></div>
+    <div class="card"><div class="ch" onclick="togCard('ctl4')"><span class="ct">What To Bring</span><span id="ctl4-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctl4" class="hidden cb">
+      <div class="bul"><span class="ck">✓</span><span>Physical learner's permit</span></div>
+      <div class="bul"><span class="ck">✓</span><span>Completed <strong>Form R-229</strong> — signed by Qualified Trainer</span></div>
+      <div class="bul"><span class="ck">✓</span><span><strong>EDEC Driver Education Certificate</strong> — sent to DMV by TNS</span></div>
+      <div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;">After passing, wait <strong>48 hours</strong> before visiting DMV with Road Test Evaluation Report.</span></div>
+    </div></div>
+    <div class="card"><div class="ch" onclick="togCard('ctl5')"><span class="ct">If Failed</span><span id="ctl5-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctl5" class="hidden cb">
+      <div class="bul"><span class="ckr">✗</span><span>Wait at least <strong>14 days</strong> before retaking + repay the <strong>$40 testing fee</strong></span></div>
+    </div></div>
+    <div class="dl"><span>License Restrictions — Age 16–17</span></div>
+    <div class="card"><div class="ch" onclick="togCard('ctl6')"><span class="ct">Restrictions After Getting Your License</span><span id="ctl6-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ctl6" class="hidden cb">
+      <div class="kv"><span class="kvk">Passengers — First 6 months</span><span class="kvv">Parents, legal guardian, or qualified trainer only</span></div>
+      <div class="kv"><span class="kvk">Passengers — Second 6 months</span><span class="kvv">Immediate family members only</span></div>
+      <div class="kv"><span class="kvk">Curfew</span><span class="kvv">No driving 11 PM – 5 AM until age 18</span></div>
+      <div class="kv"><span class="kvk">Cell phones</span><span class="kvv">No use (including hands-free) until age 18</span></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- CT SERVICES -->
+<div id="screen-ct-services" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">CT TNS Services</span></div>
+  <div class="content-body">
+    <div class="dl"><span>Bundles</span></div>
+    <div class="card"><div class="ch" onclick="togCard('csb1')"><span class="ct">Full Driver Education Bundle</span><span class="cp">From $799</span><span id="csb1-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="csb1" class="hidden cb"><span class="tag tag-teen">Teen</span><span class="tag tag-adult">Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Most complete program — every classroom topic and all BTW skills.</p><div style="font-size:22px;font-weight:700;">From $799</div><div style="font-size:11px;color:#aaa;margin-top:3px;">* Price varies by location</div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('csb2')"><span class="ct">8 And 8 Bundle</span><span class="cp">From $799</span><span id="csb2-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="csb2" class="hidden cb"><span class="tag tag-teen">Teen</span><span class="tag tag-adult">Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">8 hours classroom + 8 hours BTW. Saves $150 vs purchasing separately.</p><div style="font-size:22px;font-weight:700;">From $799</div><div style="font-size:11px;color:#aaa;margin-top:3px;">* Price varies by location</div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('csb3')"><span class="ct">Easy As 1, 2, 3 Bundle</span><span class="cp">From $479</span><span id="csb3-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="csb3" class="hidden cb"><span class="tag tag-teen">Teen</span><span class="tag tag-adult">Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Classroom, driving, and road test in one. Saves $20 vs purchasing separately.</p><div style="font-size:22px;font-weight:700;">From $479</div><div style="font-size:11px;color:#aaa;margin-top:3px;">* Price varies by location</div></div></div>
+    <div class="dl"><span>Classroom Programs</span></div>
+    <div class="card"><div class="ch" onclick="togCard('csc1')"><span class="ct">30-Hour Full Driving Course</span><span class="cp">From $330</span><span id="csc1-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="csc1" class="hidden cb"><span class="tag tag-teen">Teen</span><span class="tag tag-adult">Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Live Zoom — take sessions in any order, any time. Qualifies teens for the 120-day path.</p><div style="font-size:22px;font-weight:700;">From $330</div><div style="font-size:11px;color:#aaa;margin-top:3px;">* Price varies by location</div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('csc2')"><span class="ct">8-Hour Safe Driving Course</span><span class="cp">From $149</span><span id="csc2-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="csc2" class="hidden cb"><span class="tag tag-teen">Teen</span><span class="tag tag-adult">Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">CT's minimum classroom requirement. Required for adults 18+. Qualifies teens for 180-day path.</p><div style="font-size:22px;font-weight:700;">From $149</div><div style="font-size:11px;color:#aaa;margin-top:3px;">* Price varies by location</div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('csc3')"><span class="ct">Classroom Upgrade — 8 Hr To 30 Hr</span><span class="cp">From $180</span><span id="csc3-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="csc3" class="hidden cb"><span class="tag tag-teen">Teen</span><span class="tag tag-adult">Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Upgrade from 8-hour to full 30-hour program.</p><div style="font-size:22px;font-weight:700;">From $180</div><div style="font-size:11px;color:#aaa;margin-top:3px;">* Price varies by location</div></div></div>
+    <div class="dl"><span>Driving Lessons</span></div>
+    <div class="card"><div class="ch" onclick="togCard('csd1')"><span class="ct">Driving Lesson Packages</span><span class="cp">From $200</span><span id="csd1-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="csd1" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Private 2-hour appointments in dual-controlled, 5-star rated cars.</p><div style="border:1px solid #f0f0f0;border-radius:8px;overflow:hidden;margin:8px 0;"><div class="pr"><span style="font-weight:600;">2 Hours</span><span style="color:#F58A21;font-weight:600;">From $200</span></div><div class="pr"><span style="font-weight:600;">4 Hours</span><span style="color:#F58A21;font-weight:600;">From $400</span></div><div class="pr"><span style="font-weight:600;">6 Hours</span><span style="color:#F58A21;font-weight:600;">From $600</span></div><div class="pr"><span style="font-weight:600;">8 Hours</span><span style="color:#F58A21;font-weight:600;">From $800</span></div><div class="pr"><span style="font-weight:600;">10 Hours</span><span style="color:#F58A21;font-weight:600;">From $1,000</span></div></div><div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;">Required: physical permit, glasses if needed, closed-toe shoes. Missing items = $190 fee + lesson canceled.</span></div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('csd2')"><span class="ct">Mock Test Driving Lesson</span><span class="cp">From $200</span><span id="csd2-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="csd2" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">2-hour session simulating the real road test.</p><div style="font-size:22px;font-weight:700;">From $200</div></div></div>
+    <div class="dl"><span>License Testing</span></div>
+    <div class="card"><div class="ch" onclick="togCard('cst1')"><span class="ct">License Test @ TNS</span><span class="cp">From $150</span><span id="cst1-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="cst1" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><div style="font-size:22px;font-weight:700;margin:8px 0;">From $150</div><div class="kv"><span class="kvk">Cancel by</span><span class="kvv">5 days via Student Portal</span></div><div class="kv"><span class="kvk">Late cancel fee</span><span class="kvv" style="color:#E24B4A;">$100 (includes $40 DMV)</span></div><div class="kv"><span class="kvk">No-show</span><span class="kvv" style="color:#E24B4A;">Forfeit + $40 DMV fee</span></div><div class="kv"><span class="kvk">Retest fee</span><span class="kvv" style="color:#E24B4A;">$150 + $40 DMV fee</span></div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('cst2')"><span class="ct">2-Hour Lesson &amp; License Test Package</span><span class="cp">From $350</span><span id="cst2-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="cst2" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Private lesson + license test at TNS — all in one.</p><div style="font-size:22px;font-weight:700;">From $350</div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('cst3')"><span class="ct">Retest @ TNS</span><span class="cp">From $190</span><span id="cst3-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="cst3" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Includes the $40 DMV retest fee.</p><div style="font-size:22px;font-weight:700;">From $190</div></div></div>
+  </div>
+</div>
+
+<!-- CT LOCATIONS -->
+<div id="screen-ct-locations" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">CT Locations</span></div>
+  <div class="content-body">
+    <div class="zip-box"><span class="field-lbl">Find Locations Near You</span><div class="zip-row"><input class="zip-in" type="text" id="ct-zip" placeholder="Enter CT zip code (e.g. 06702)" maxlength="5" inputmode="numeric"/><button class="zip-btn-o" id="ct-zip-btn">Search</button></div><div id="ct-zip-res" style="margin-top:12px;"></div></div>
+    <div class="loc-legend"><div class="legend-item"><div style="width:10px;height:10px;border-radius:50%;background:#F58A21;"></div><span>TNS License Test Location</span></div><div class="legend-item"><div style="width:10px;height:10px;border-radius:50%;background:#bbb;border:1px solid #ccc;"></div><span>Pickup / Drop-off Only</span></div></div>
+    <div class="dl"><span>All CT Locations — 57 Total</span></div>
+    <div id="ct-all-locs"></div>
+  </div>
+</div>
+
+<!-- MA PERMIT -->
+<div id="screen-ma-permit" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">MA Permit Guide</span></div>
+  <div class="content-body">
+    <span class="badge-b">Source: mass.gov RMV</span>
+    <div class="dl"><span>Eligibility &amp; Application</span></div>
+    <div class="card"><div class="ch" onclick="togCard('map1')"><span class="ct">Who Can Apply</span><span id="map1-c" style="color:#aaa;font-size:18px;">+</span></div><div id="map1" class="hidden cb">
+      <div class="bul"><span class="ckb">✓</span><span>Must be at least <strong>16 years old</strong> and a Massachusetts resident</span></div>
+      <div class="bul"><span class="ckb">✓</span><span>Must not hold a driver's license or learner's permit in any other state</span></div>
+      <div class="bul"><span class="ckb">✓</span><span>If under 18: written parental or legal guardian consent required</span></div>
+      <div class="co co-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#1A7A96;">Permit valid for <strong>2 years</strong>. If expired, must reapply and retake the knowledge exam.</span></div>
+    </div></div>
+    <div class="card"><div class="ch" onclick="togCard('map2')"><span class="ct">Application Process</span><span id="map2-c" style="color:#aaa;font-size:18px;">+</span></div><div id="map2" class="hidden cb">
+      <div class="bul"><span class="ckb">✓</span><span><strong>Start application online</strong> at myRMV (mass.gov) — required before visiting a Service Center</span></div>
+      <div class="bul"><span class="ckb">✓</span><span>Schedule appointment at an <strong>RMV Service Center</strong> (or AAA if a member)</span></div>
+      <div class="bul"><span class="ckb">✓</span><span>Pass a <strong>vision screening</strong> and pay <strong>$30 application fee</strong></span></div>
+      <div class="bul"><span class="ckb">✓</span><span>Take knowledge exam at Service Center or <strong>online at home</strong> after documents are verified</span></div>
+    </div></div>
+    <div class="dl"><span>Knowledge Exam</span></div>
+    <div class="card"><div class="ch" onclick="togCard('map3')"><span class="ct">Exam Format</span><span id="map3-c" style="color:#aaa;font-size:18px;">+</span></div><div id="map3" class="hidden cb">
+      <div class="kv"><span class="kvk">Questions</span><span class="kvv">25 questions</span></div>
+      <div class="kv"><span class="kvk">Passing score</span><span class="kvv">18 correct</span></div>
+      <div class="kv"><span class="kvk">Time limit</span><span class="kvv">25 minutes</span></div>
+      <div class="kv"><span class="kvk">Languages</span><span class="kvv">Available in 37+ languages</span></div>
+      <div class="co co-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#1A7A96;">Online exam: computer only, working camera required, no other people in room. Must complete within 60 days of application.</span></div>
+    </div></div>
+    <div class="dl"><span>Permit Restrictions</span></div>
+    <div class="card"><div class="ch" onclick="togCard('map4')"><span class="ct">Rules While Driving On A Permit</span><span id="map4-c" style="color:#aaa;font-size:18px;">+</span></div><div id="map4" class="hidden cb">
+      <div class="kv"><span class="kvk">Supervising driver</span><span class="kvv">Licensed, age 21+, at least 1 year experience, seated beside driver</span></div>
+      <div class="kv"><span class="kvk">Curfew (under 18)</span><span class="kvv">No driving midnight–5 AM unless parent/guardian supervising</span></div>
+      <div class="kv"><span class="kvk">Always carry</span><span class="kvv">Must have learner's permit when driving</span></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- MA LICENSE -->
+<div id="screen-ma-license" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">MA License Guide</span></div>
+  <div class="content-body">
+    <span class="badge-b">Source: mass.gov RMV</span>
+    <div class="dl"><span>Driver's Education — Under 18</span></div>
+    <div class="card"><div class="ch" onclick="togCard('mal1')"><span class="ct">Required Driver's Ed Program</span><span id="mal1-c" style="color:#aaa;font-size:18px;">+</span></div><div id="mal1" class="hidden cb">
+      <div class="bul"><span class="ck">✓</span><span>Required for <strong>all applicants under age 18</strong></span></div>
+      <div class="bul"><span class="ck">✓</span><span><strong>30 hours</strong> classroom + <strong>12 hours BTW</strong> + <strong>6 hours observation</strong></span></div>
+      <div class="co co-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#1A7A96;">TNS Full Driver Ed Bundle + 12-Hour BTW &amp; 6-Hour Observation Bundle satisfies all three state components.</span></div>
+    </div></div>
+    <div class="dl"><span>Junior Operator License (JOL) — Ages 16½ To 18</span></div>
+    <div class="card"><div class="ch" onclick="togCard('mal2')"><span class="ct">JOL Requirements</span><span id="mal2-c" style="color:#aaa;font-size:18px;">+</span></div><div id="mal2" class="hidden cb">
+      <div class="bul"><span class="ck">✓</span><span>Hold valid permit for at least <strong>6 consecutive months</strong> with a clean record</span></div>
+      <div class="bul"><span class="ck">✓</span><span>Complete approved driver's ed (30 hrs classroom + 12 hrs BTW + 6 hrs observation)</span></div>
+      <div class="bul"><span class="ck">✓</span><span>At least <strong>40 additional supervised hours</strong> (reduced to <strong>30 hrs</strong> with driver skills development program)</span></div>
+      <div class="bul"><span class="ck">✓</span><span>Parent/guardian participates in <strong>2 hours of driver's ed</strong> (waived if completed within past 5 years)</span></div>
+      <div class="bul"><span class="ck">✓</span><span>Pass a <strong>final exam</strong></span></div>
+    </div></div>
+    <div class="dl"><span>JOL Restrictions</span></div>
+    <div class="card"><div class="ch" onclick="togCard('mal3')"><span class="ct">Restrictions On A Junior Operator License</span><span id="mal3-c" style="color:#aaa;font-size:18px;">+</span></div><div id="mal3" class="hidden cb">
+      <div class="kv"><span class="kvk">Passengers — First 6 months</span><span class="kvv">No passengers under 18 (except immediate family) unless licensed adult 21+ present</span></div>
+      <div class="kv"><span class="kvk">Curfew</span><span class="kvv">No driving 12:30 AM – 5:00 AM unless licensed adult 21+ present</span></div>
+      <div class="kv"><span class="kvk">Cell phones</span><span class="kvv">No use while driving</span></div>
+      <div class="kv"><span class="kvk">Passenger restriction lifts</span><span class="kvv">At age 17</span></div>
+      <div class="kv"><span class="kvk">Nighttime restriction lifts</span><span class="kvv">At age 18</span></div>
+      <div class="kv"><span class="kvk">Full unrestricted license</span><span class="kvv">Automatically at age 18</span></div>
+    </div></div>
+    <div class="dl"><span>Adult License — 18+</span></div>
+    <div class="card"><div class="ch" onclick="togCard('mal4')"><span class="ct">Getting A License As An Adult</span><span id="mal4-c" style="color:#aaa;font-size:18px;">+</span></div><div id="mal4" class="hidden cb">
+      <div class="bul"><span class="ckb">✓</span><span>Must still obtain a learner's permit first — <strong>no driver's ed or permit hold period required</strong></span></div>
+      <div class="bul"><span class="ckb">✓</span><span>Complete at least <strong>one 2-hour driving lesson</strong> with TNS before testing</span></div>
+      <div class="bul"><span class="ckb">✓</span><span>Pay RMV fees in advance via <strong>myRMV at mass.gov</strong></span></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- MA SERVICES -->
+<div id="screen-ma-services" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">MA TNS Services</span></div>
+  <div class="content-body">
+    <div class="dl"><span>Bundles</span></div>
+    <div class="card"><div class="ch" onclick="togCard('msb1')"><span class="ct">Full Driver Education Bundle</span><span class="cpb">From $925</span><span id="msb1-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="msb1" class="hidden cb"><span class="tag tag-teen">Teen</span><p style="color:#555;font-size:13px;margin:8px 0;">Most complete MA driver education program — all classroom, BTW, and observation hours.</p><div style="font-size:22px;font-weight:700;">From $925</div><div style="font-size:11px;color:#aaa;margin-top:3px;">* Price varies by location</div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('msb2')"><span class="ct">12-Hour Driving + 6-Hour Observation Bundle</span><span class="cpb">From $700</span><span id="msb2-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="msb2" class="hidden cb"><span class="tag tag-teen">Teen</span><p style="color:#555;font-size:13px;margin:8px 0;">12 hours BTW + 6 hours observation. Counts toward state JOL requirements.</p><div style="font-size:22px;font-weight:700;">From $700</div><div style="font-size:11px;color:#aaa;margin-top:3px;">* Price varies by location</div></div></div>
+    <div class="dl"><span>Classroom Programs</span></div>
+    <div class="card"><div class="ch" onclick="togCard('msc1')"><span class="ct">30-Hour Full Driving Course</span><span class="cpb">From $330</span><span id="msc1-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="msc1" class="hidden cb"><span class="tag tag-teen">Teen</span><p style="color:#555;font-size:13px;margin:8px 0;">Required for teens under 18. Live Zoom. State-certified.</p><div style="font-size:22px;font-weight:700;">From $330</div><div style="font-size:11px;color:#aaa;margin-top:3px;">* Price varies by location</div></div></div>
+    <div class="dl"><span>Driving Lessons</span></div>
+    <div class="card"><div class="ch" onclick="togCard('msd1')"><span class="ct">Driving Lesson Packages</span><span class="cpb">From $200</span><span id="msd1-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="msd1" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><div style="border:1px solid #f0f0f0;border-radius:8px;overflow:hidden;margin:8px 0;"><div class="pr"><span style="font-weight:600;">2 Hours</span><span style="color:#29A3BD;font-weight:600;">From $200</span></div><div class="pr"><span style="font-weight:600;">4 Hours</span><span style="color:#29A3BD;font-weight:600;">From $400</span></div><div class="pr"><span style="font-weight:600;">6 Hours</span><span style="color:#29A3BD;font-weight:600;">From $600</span></div><div class="pr pr-hl"><span style="font-weight:600;">8 Hours <span style="font-size:10px;color:#1A7A96;">★ Recommended</span></span><span style="color:#29A3BD;font-weight:600;">From $800</span></div><div class="pr"><span style="font-weight:600;">10 Hours</span><span style="color:#29A3BD;font-weight:600;">From $1,000</span></div><div class="pr"><span style="font-weight:600;">12 Hours</span><span style="color:#29A3BD;font-weight:600;">From $1,200</span></div></div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('msd2')"><span class="ct">Mock Test Driving Lesson</span><span class="cpb">From $200</span><span id="msd2-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="msd2" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">2-hour session simulating the real road test.</p><div style="font-size:22px;font-weight:700;">From $200</div></div></div>
+    <div class="dl"><span>License Testing</span></div>
+    <div class="card"><div class="ch" onclick="togCard('mst1')"><span class="ct">License Test @ TNS</span><span class="cpb">From $119</span><span id="mst1-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="mst1" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Test at Northampton, Worcester, or West Springfield — Saturdays &amp; Mondays.</p><div style="font-size:22px;font-weight:700;">From $119</div><div class="kv" style="margin-top:10px;"><span class="kvk">Cancel by</span><span class="kvv">Tuesday of prior week</span></div><div class="kv"><span class="kvk">Late cancel fee</span><span class="kvv" style="color:#E24B4A;">$80 (includes RMV fee)</span></div><div class="kv"><span class="kvk">RMV fees</span><span class="kvv">Must prepay at myRMV</span></div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('mst2')"><span class="ct">License Test @ The RMV</span><span class="cpb">From $150</span><span id="mst2-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="mst2" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">TNS schedules, sponsors, and provides vehicle — any day of the week.</p><div style="font-size:22px;font-weight:700;">From $150</div><div class="kv" style="margin-top:10px;"><span class="kvk">Cancel by</span><span class="kvv">5 days in advance</span></div><div class="kv"><span class="kvk">Late cancel fee</span><span class="kvv" style="color:#E24B4A;">$80 (includes RMV fee)</span></div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('mst3')"><span class="ct">2-Hour Lesson &amp; Test @ TNS</span><span class="cpb">From $319</span><span id="mst3-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="mst3" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Private lesson + road test at TNS — skip the RMV.</p><div style="font-size:22px;font-weight:700;">From $319</div></div></div>
+    <div class="card"><div class="ch" onclick="togCard('mst4')"><span class="ct">2-Hour Lesson &amp; Test @ RMV</span><span class="cpb">From $319</span><span id="mst4-c" style="color:#aaa;font-size:18px;margin-left:8px;">+</span></div><div id="mst4" class="hidden cb"><span class="tag tag-both">Teen &amp; Adult</span><p style="color:#555;font-size:13px;margin:8px 0;">Private lesson + sponsored road test at the RMV.</p><div style="font-size:22px;font-weight:700;">From $319</div></div></div>
+  </div>
+</div>
+
+<!-- MA LOCATIONS -->
+<div id="screen-ma-locations" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">MA Locations</span></div>
+  <div class="content-body">
+    <div class="zip-box"><span class="field-lbl">Find Locations Near You</span><div class="zip-row"><input class="zip-in zip-in-b" type="text" id="ma-zip" placeholder="Enter MA zip code (e.g. 01060)" maxlength="5" inputmode="numeric"/><button class="zip-btn-b" id="ma-zip-btn">Search</button></div><div id="ma-zip-res" style="margin-top:12px;"></div></div>
+    <div class="dl"><span>Full Service — 9 Locations</span></div>
+    <div style="font-size:12px;color:#1A7A96;background:#E0F4FA;border-radius:8px;padding:8px 12px;margin-bottom:12px;">Classes, driving lessons &amp; license testing</div>
+    <div id="ma-full-locs"></div>
+    <div class="dl" style="margin-top:16px;"><span>Pickup / Drop-Off Only — 5 Locations</span></div>
+    <div style="font-size:12px;color:#666;background:#F0F0F0;border-radius:8px;padding:8px 12px;margin-bottom:12px;">Driving lesson pickup &amp; drop-off only</div>
+    <div id="ma-pickup-locs"></div>
+  </div>
+</div>
+
+<!-- ELIGIBILITY CALCULATOR -->
+<div id="screen-eligibility" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">Eligibility Calculator</span></div>
+  <div class="content-body">
+    <div style="margin-bottom:1.25rem;"><span class="field-lbl">State</span><div class="seg"><div id="btn-ct" class="seg-btn ao" onclick="setCalcState('CT')">Connecticut</div><div id="btn-ma" class="seg-btn" onclick="setCalcState('MA')">Massachusetts</div></div></div>
+    <div style="margin-bottom:1.25rem;"><span class="field-lbl">Date Of Birth</span><input type="date" id="e-dob" onchange="calcElig()"/></div>
+    <div style="margin-bottom:1.25rem;"><span class="field-lbl">Permit Issued Date</span><input type="date" id="e-permit" onchange="calcElig()"/></div>
+    <div id="course-grp" style="margin-bottom:1.25rem;"><span class="field-lbl">Course Type</span><div class="seg"><div id="btn-full" class="seg-btn ao" onclick="setCalcCourse('full')">Full Course (30 Hr)</div><div id="btn-8hr" class="seg-btn" onclick="setCalcCourse('8hr')">8-Hour Course</div></div></div>
+    <div id="elig-result"></div>
+    <div id="elig-policy" class="hidden" style="margin-top:1.5rem;">
+      <div id="ct-policy-wrap" class="hidden">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><div style="height:1px;flex:1;background:#eee;"></div><span style="font-size:10px;font-weight:700;color:#3B3B3B;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">CT @ TNS Policies</span><div style="height:1px;flex:1;background:#eee;"></div></div>
+        <div class="tab-bar"><div id="ct-tab-state" class="tab-btn active" onclick="setCTTab('state')">State Reqs</div><div id="ct-tab-tns" class="tab-btn" onclick="setCTTab('tns')">TNS Policy</div><div id="ct-tab-fees" class="tab-btn" onclick="setCTTab('fees')">Fees</div><div id="ct-tab-pass" class="tab-btn" onclick="setCTTab('pass')">If Passed</div><div id="ct-tab-fail" class="tab-btn" onclick="setCTTab('fail')">If Failed</div></div>
+        <div id="ct-tab-c-state"><div class="card"><div class="ch" onclick="togCard('ct-sr1')"><span class="ct">Teens — Under 18</span><span id="ct-sr1-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-sr1" class="hidden cb"><div class="bul"><span class="ck">✓</span><span><strong>Full course</strong> → 120-day permit hold</span></div><div class="bul"><span class="ck">✓</span><span><strong>8-hour course</strong> → 180-day permit hold</span></div></div></div><div class="card"><div class="ch" onclick="togCard('ct-sr2')"><span class="ct">Adults — 18 And Over</span><span id="ct-sr2-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-sr2" class="hidden cb"><div class="bul"><span class="ckb">✓</span><span>Minimum 8-hour course required — <strong>90-day</strong> permit hold</span></div></div></div></div>
+        <div id="ct-tab-c-tns" class="hidden"><div class="card"><div style="background:#3B3B3B;padding:10px 14px;"><span class="ct">TNS Requirement</span></div><div class="cb">Must complete minimum <strong>2 hours of driving lessons at least 5 days prior</strong> to test date. No lessons or classes may be scheduled in the 5 days before the test.</div></div><div class="card"><div class="ch" onclick="togCard('ct-dl')"><span class="ct">Cancellation Deadline Calculator</span><span id="ct-dl-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-dl" class="hidden" style="padding:14px;background:#F0F8FB;"><span class="field-lbl" style="margin-bottom:6px;">Scheduled Test Date</span><input type="date" id="ct-test-date" onchange="calcCTDeadline()"/><div id="ct-deadline-res" style="margin-top:10px;"></div></div></div></div>
+        <div id="ct-tab-c-fees" class="hidden"><div class="card"><div style="background:#3B3B3B;padding:10px 14px;"><span class="ct">Fees</span></div><div class="fee-tabs"><div id="ft-ct-test" class="fee-tab active" onclick="setCTFeeTab('test')">License Test</div><div id="ft-ct-retest" class="fee-tab" onclick="setCTFeeTab('retest')">Retest</div><div id="ft-ct-cancel" class="fee-tab" onclick="setCTFeeTab('cancel')">Cancellation</div></div><div id="ft-ct-c-test" class="cb"><div style="font-size:26px;font-weight:700;margin-bottom:4px;">$150</div><div style="font-size:13px;color:#888;">Standard service fee</div></div><div id="ft-ct-c-retest" class="cb hidden"><div style="font-size:26px;font-weight:700;margin-bottom:4px;">$190</div><div style="font-size:13px;color:#888;">Includes $40 DMV fee</div></div><div id="ft-ct-c-cancel" class="cb hidden"><div class="kv"><span class="kvk">Cancel by</span><span class="kvv">5 days via Student Portal</span></div><div class="kv"><span class="kvk">Late cancellation</span><span class="kvv" style="color:#E24B4A;">$100 (includes $40 DMV)</span></div><div class="kv"><span class="kvk">No-show</span><span class="kvv" style="color:#E24B4A;">Forfeit + $40 DMV fee</span></div></div></div></div>
+        <div id="ct-tab-c-pass" class="hidden"><div style="border:1px solid #73BF45;border-radius:10px;overflow:hidden;"><div style="background:#3B3B3B;padding:10px 14px;display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:50%;background:#73BF45;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;">✓</div><span class="ct">If Passed — CT</span></div><div style="padding:14px;background:#F4FBF0;"><div class="bul"><div style="width:6px;height:6px;border-radius:50%;background:#73BF45;margin-top:5px;flex-shrink:0;"></div><span>Student receives a <strong>flyer from the DMV agent</strong> explaining how to get their physical license.</span></div><div class="bul"><div style="width:6px;height:6px;border-radius:50%;background:#73BF45;margin-top:5px;flex-shrink:0;"></div><span><strong>Temporary license valid 20 days</strong> — purchase real license next day (5–7 business days to arrive).</span></div></div></div></div>
+        <div id="ct-tab-c-fail" class="hidden"><div style="border:1px solid #E24B4A;border-radius:10px;overflow:hidden;"><div style="background:#3B3B3B;padding:10px 14px;display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:50%;background:#E24B4A;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;">✗</div><span class="ct">If Failed — CT</span></div><div style="padding:14px;background:#FFF5F5;"><div class="bul"><div style="width:6px;height:6px;border-radius:50%;background:#E24B4A;margin-top:5px;flex-shrink:0;"></div><span>Wait <strong>14 days</strong>, repay <strong>$40 testing fee</strong>. Retest @ TNS: <strong>$190</strong> (includes $40 DMV).</span></div></div><div style="padding:12px 14px;background:#fff;border-top:1px solid #f5c6c6;"><span class="field-lbl" style="margin-bottom:6px;">Retest Date Calculator</span><input type="date" id="ct-fail-date" onchange="calcCTRetest()"/><div id="ct-retest-res" style="margin-top:8px;"></div></div></div></div>
+      </div>
+      <div id="ma-policy-wrap" class="hidden">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><div style="height:1px;flex:1;background:#eee;"></div><span style="font-size:10px;font-weight:700;color:#3B3B3B;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">MA @ TNS Policies</span><div style="height:1px;flex:1;background:#eee;"></div></div>
+        <div class="tab-bar"><div id="ma-tab-state" class="tab-btn active" onclick="setMATab('state')">State Reqs</div><div id="ma-tab-tns" class="tab-btn" onclick="setMATab('tns')">TNS Policy</div><div id="ma-tab-fees" class="tab-btn" onclick="setMATab('fees')">Fees</div><div id="ma-tab-pass" class="tab-btn" onclick="setMATab('pass')">If Passed</div><div id="ma-tab-fail" class="tab-btn" onclick="setMATab('fail')">If Failed</div></div>
+        <div id="ma-tab-c-state"><div class="card"><div class="ch" onclick="togCard('ma-sr1')"><span class="ct">Teens — Under 18</span><span id="ma-sr1-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-sr1" class="hidden cb"><div class="bul"><span class="ck">✓</span><span>Permit held for <strong>6 months (184 days)</strong></span></div><div class="bul"><span class="ck">✓</span><span>Must be at least <strong>16½ years old</strong></span></div><div class="bul"><span class="ck">✓</span><span><strong>Full Driver's Ed:</strong> 30 hrs classroom, 12 hrs BTW, 6 hrs observation</span></div></div></div><div class="card"><div class="ch" onclick="togCard('ma-sr2')"><span class="ct">Adults — 18 And Over</span><span id="ma-sr2-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-sr2" class="hidden cb"><div class="bul"><span class="ckb">✓</span><span>Must hold a <strong>valid learner's permit</strong> — no mandatory hold period</span></div></div></div></div>
+        <div id="ma-tab-c-tns" class="hidden"><div class="card"><div style="background:#3B3B3B;padding:10px 14px;"><span class="ct">TNS Requirement</span></div><div class="cb">All students testing with TNS must complete at least <strong>one 2-hour driving lesson</strong> prior to their test date.</div></div><div class="card"><div class="ch" onclick="togCard('ma-dl')"><span class="ct">Cancellation Deadline Calculator</span><span id="ma-dl-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-dl" class="hidden" style="padding:14px;background:#F0F8FB;"><span class="field-lbl" style="margin-bottom:6px;">Test Type</span><div class="seg" style="margin-bottom:12px;"><div id="btn-tns-test" class="seg-btn ab" onclick="setMATestType('tns')">Test @ TNS</div><div id="btn-rmv-test" class="seg-btn" onclick="setMATestType('rmv')">Meet @ RMV</div></div><div id="ma-tns-note" style="font-size:12px;color:#1A7A96;margin-bottom:6px;">Tests @ TNS are on Saturdays or Mondays.</div><span class="field-lbl" style="margin-bottom:4px;">Scheduled Test Date</span><input type="date" id="ma-test-date" onchange="calcMADeadline()"/><div id="ma-deadline-res" style="margin-top:10px;"></div></div></div></div>
+        <div id="ma-tab-c-fees" class="hidden"><div class="card"><div style="background:#3B3B3B;padding:10px 14px;"><span class="ct">Fees</span></div><div class="fee-tabs"><div id="ft-ma-tns" class="fee-tab active" onclick="setMAFeeTab('tns')">Test @ TNS</div><div id="ft-ma-rmv" class="fee-tab" onclick="setMAFeeTab('rmv')">Meet @ RMV</div><div id="ft-ma-cancel" class="fee-tab" onclick="setMAFeeTab('cancel')">Cancellation</div></div><div id="ft-ma-c-tns" class="cb"><div style="font-size:26px;font-weight:700;margin-bottom:4px;">$119</div><div style="font-size:12px;color:#888;">Cancel by <strong>Tuesday</strong> of prior week. Late cancel: <strong style="color:#E24B4A;">$80</strong>.</div></div><div id="ft-ma-c-rmv" class="cb hidden"><div style="font-size:26px;font-weight:700;margin-bottom:4px;">$150</div><div style="font-size:12px;color:#888;">Cancel <strong>5 days in advance</strong>. Late cancel: <strong style="color:#E24B4A;">$80</strong>.</div></div><div id="ft-ma-c-cancel" class="cb hidden"><div class="kv"><span class="kvk">Test @ TNS — cancel by</span><span class="kvv">Tuesday prior week</span></div><div class="kv"><span class="kvk">Meet @ RMV — cancel by</span><span class="kvv">5 days in advance</span></div><div class="kv"><span class="kvk">Late cancel (both)</span><span class="kvv" style="color:#E24B4A;">$80 (includes RMV fee)</span></div><div class="kv"><span class="kvk">No-show (both)</span><span class="kvv" style="color:#E24B4A;">Forfeit — no credit/refund</span></div></div></div></div>
+        <div id="ma-tab-c-pass" class="hidden"><div style="border:1px solid #73BF45;border-radius:10px;overflow:hidden;"><div style="background:#3B3B3B;padding:10px 14px;display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:50%;background:#73BF45;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;">✓</div><span class="ct">If Passed — MA</span></div><div style="padding:14px;background:#F4FBF0;"><div class="bul"><div style="width:6px;height:6px;border-radius:50%;background:#73BF45;margin-top:5px;flex-shrink:0;"></div><span>Examiner <strong>signs the learner's permit</strong> (temp license starting next day) if fees prepaid at myRMV.</span></div><div class="bul"><div style="width:6px;height:6px;border-radius:50%;background:#73BF45;margin-top:5px;flex-shrink:0;"></div><span>Official license mailed to address on road test application.</span></div></div></div></div>
+        <div id="ma-tab-c-fail" class="hidden"><div style="border:1px solid #E24B4A;border-radius:10px;overflow:hidden;"><div style="background:#3B3B3B;padding:10px 14px;display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:50%;background:#E24B4A;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;">✗</div><span class="ct">If Failed — MA</span></div><div style="padding:14px;background:#FFF5F5;"><div class="bul"><div style="width:6px;height:6px;border-radius:50%;background:#E24B4A;margin-top:5px;flex-shrink:0;"></div><span>Wait <strong>2 weeks (14 days)</strong>. Student must pay <strong>RMV retest fee via myRMV</strong> before TNS can book.</span></div></div><div style="padding:12px 14px;background:#fff;border-top:1px solid #f5c6c6;"><span class="field-lbl" style="margin-bottom:6px;">Retest Date Calculator</span><input type="date" id="ma-fail-date" onchange="calcMARetest()"/><div id="ma-retest-res" style="margin-top:8px;"></div></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TERMS & CONDITIONS -->
+<div id="screen-terms" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">Terms &amp; Conditions</span></div>
+  <div class="content-body">
+    <div class="terms-seg"><button class="terms-seg-btn ao" id="btn-terms-ct" onclick="setTermsState('CT')">Connecticut</button><button class="terms-seg-btn" id="btn-terms-ma" onclick="setTermsState('MA')">Massachusetts</button></div>
+    <!-- CT TERMS -->
+    <div id="ct-terms">
+      <div class="dl"><span>Age &amp; Enrollment</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t1')"><span class="ct">Age Restrictions &amp; Class Limits</span><span id="ct-t1-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t1" class="hidden cb">
+        <div class="bul"><span class="ck">✓</span><span>Must be at least <strong>16 years old</strong> to receive credit for classroom sessions or driving lessons</span></div>
+        <div class="bul"><span class="ck">✓</span><span>May enroll at 15, provided class starts after their 16th birthday — no credit given before age 16</span></div>
+        <div class="bul"><span class="ck">✓</span><span><strong>Permit Prep Tutoring</strong> open to students age 15+</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Under 18 (school in session): max 2 hrs classroom/weekday, 4 hrs/weekend, 2 hrs driving/day</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Under 18 (school breaks): max 4 hrs classroom, 2 hrs driving/day</span></div>
+        <div class="bul"><span class="ck">✓</span><span>18 and over: max 8 hrs classroom, 2 hrs driving/day (secondary school students: max 4 hrs classroom on weekdays)</span></div>
+      </div></div>
+      <div class="dl"><span>Digital Classroom Policies</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t2')"><span class="ct">Zoom Class Requirements</span><span id="ct-t2-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t2" class="hidden cb">
+        <div class="bul"><span class="ck">✓</span><span>Camera on, facing student, and steady throughout class</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Full legal name as it appears on Learner's Permit (nickname allowed after a dash)</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Stationary device with a stable network connection</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Must complete and pass a <strong>10-question quiz</strong> after each session</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Under-18 students: parent or guardian must be present for <strong>Session 1</strong> and sign off in Student Portal</span></div>
+        <div class="bul"><span class="ckr">✗</span><span>No phones, multitasking, or joining from a moving vehicle</span></div>
+      </div></div>
+      <div class="dl"><span>Driving Lesson Policies</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t3')"><span class="ct">Cancellations &amp; Tardiness</span><span id="ct-t3-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t3" class="hidden cb">
+        <div class="kv"><span class="kvk">Cancellation notice</span><span class="kvv">24 hours in advance</span></div>
+        <div class="kv"><span class="kvk">Late cancel fee</span><span class="kvv" style="color:#E24B4A;">$100</span></div>
+        <div class="kv"><span class="kvk">Up to 30 min late</span><span class="kvv" style="color:#E24B4A;">$50 fee</span></div>
+        <div class="kv"><span class="kvk">Up to 60 min late</span><span class="kvv" style="color:#E24B4A;">$100 fee</span></div>
+        <div class="kv"><span class="kvk">Over 60 min late</span><span class="kvv" style="color:#E24B4A;">Lesson canceled + $190 fee</span></div>
+        <div class="kv"><span class="kvk">No-show / unprepared</span><span class="kvv" style="color:#E24B4A;">$190 fee or forfeiture</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t4')"><span class="ct">Required Items For Lessons</span><span id="ct-t4-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t4" class="hidden cb">
+        <div class="bul"><span class="ck">✓</span><span>Physical permit or driver's license (no photocopies or digital copies)</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Glasses or contacts if required by a B restriction</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Proper footwear — fully enclosed, closed-toe, closed-heel, flat sole sneakers</span></div>
+        <div class="bul"><span class="ckr">✗</span><span>Orthopedic support devices (casts, splints, braces) — <strong>prohibited</strong> from all driving lessons and road tests</span></div>
+        <div class="co co-r"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#E24B4A" stroke-width="2"/></svg><span style="color:#A32D2D;">Missing any required item = $190 fee and lesson canceled. No sandals, flip-flops, heels, or open-toe shoes.</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t5')"><span class="ct">Medical Cancellations &amp; Weather</span><span id="ct-t5-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t5" class="hidden cb">
+        <div class="bul"><span class="ck">✓</span><span>Medical cancellations may be waived with a doctor's note — no specific health details needed</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Submit note via Student Portal within <strong>2 days</strong> of missed appointment</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Fee waiver reviewed within <strong>3–5 business days</strong></span></div>
+        <div class="bul"><span class="ck">✓</span><span>Weather cancellations decided by TNS — notified via email/SMS, reschedule via Student Portal</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t6')"><span class="ct">No Parents Or Guardians In Vehicle</span><span id="ct-t6-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t6" class="hidden cb">
+        <div class="bul"><span class="ckr">✗</span><span>No one besides enrolled students or Next Street personnel allowed in the vehicle — <strong>no exceptions</strong></span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t7')"><span class="ct">Late Pick-Up Policy</span><span id="ct-t7-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t7" class="hidden cb">
+        <div class="bul"><span class="ck">✓</span><span>Instructors will remain with students for a maximum of <strong>15 minutes</strong> after the end of the lesson</span></div>
+        <div class="bul"><span class="ckr">✗</span><span>If parent/guardian cannot be reached after 15 minutes, <strong>local authorities may be contacted</strong></span></div>
+      </div></div>
+      <div class="dl"><span>License Test Policies</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t8')"><span class="ct">Eligibility &amp; Requirements</span><span id="ct-t8-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t8" class="hidden cb">
+        <div class="bul"><span class="ck">✓</span><span>Must complete minimum <strong>2 hours driving lessons at least 5 days prior</strong> to test date</span></div>
+        <div class="bul"><span class="ck">✓</span><span>No classes or lessons may be scheduled within 5 days leading up to the test</span></div>
+        <div class="sub-lbl">Teens — Under 18</div>
+        <div class="bul"><span class="ck">✓</span><span><strong>120 days</strong> permit hold if completed Full Driver's Education Program</span></div>
+        <div class="bul"><span class="ck">✓</span><span><strong>180 days</strong> permit hold if completed 8-Hour Safe Driving Course</span></div>
+        <div class="sub-lbl">Adults — 18 And Over</div>
+        <div class="bul"><span class="ck">✓</span><span><strong>90 days</strong> permit hold + complete 8-Hour Safe Driving Course</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t9')"><span class="ct">Cancellations &amp; No-Shows</span><span id="ct-t9-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t9" class="hidden cb">
+        <div class="kv"><span class="kvk">Cancel by</span><span class="kvv">5 days in advance</span></div>
+        <div class="kv"><span class="kvk">Late cancel fee</span><span class="kvv" style="color:#E24B4A;">$100 (includes $40 DMV fee)</span></div>
+        <div class="kv"><span class="kvk">No-show</span><span class="kvv" style="color:#E24B4A;">Forfeit test + $40 DMV fee</span></div>
+        <div class="kv"><span class="kvk">Retest fee</span><span class="kvv" style="color:#E24B4A;">$150 + $40 DMV fee</span></div>
+      </div></div>
+      <div class="dl"><span>eDEC Certificate</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t10')"><span class="ct">eDEC Requirements</span><span id="ct-t10-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t10" class="hidden cb">
+        <div class="bul"><span class="ck">✓</span><span>Pass all classroom quizzes at <strong>70% or higher</strong></span></div>
+        <div class="bul"><span class="ck">✓</span><span>Parent or guardian signature for Parent Class (minors)</span></div>
+        <div class="bul"><span class="ck">✓</span><span>Valid CT permit number on file, all courses completed, account paid in full</span></div>
+        <div class="bul"><span class="ck">✓</span><span>eDEC uploaded to Student Portal within <strong>5–7 days</strong> of completion</span></div>
+        <div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;">DMV no longer accepts CS-1 certificates (as of November 1, 2022). A $25 fee applies to convert a CS-1 to eDEC.</span></div>
+      </div></div>
+      <div class="dl"><span>Account &amp; Payment</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t11')"><span class="ct">Refunds &amp; Account Policies</span><span id="ct-t11-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t11" class="hidden cb">
+        <div class="kv"><span class="kvk">Account duration</span><span class="kvv">24 months</span></div>
+        <div class="kv"><span class="kvk">Bundles</span><span class="kvv" style="color:#E24B4A;">Non-refundable &amp; non-transferable</span></div>
+        <div class="kv"><span class="kvk">À la carte refund</span><span class="kvv">Within 6 months, 10% processing fee</span></div>
+        <div class="kv"><span class="kvk">Unpaid fees deadline</span><span class="kvv">30 days from assessment</span></div>
+        <div class="kv"><span class="kvk">Certificates</span><span class="kvv">Only issued when paid in full</span></div>
+        <div class="kv"><span class="kvk">Gift certificates</span><span class="kvv">Non-refundable, no expiry</span></div>
+        <div class="bul" style="margin-top:10px;"><span class="ck">✓</span><span>Billing errors: TNS not liable but will resolve portal balance errors. Returned/reversed payments: student's responsibility.</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ct-t12')"><span class="ct">Recording Policy</span><span id="ct-t12-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ct-t12" class="hidden cb">
+        <div class="bul"><span class="ck">✓</span><span>All driving lessons, classroom sessions, license tests, and phone calls may be <strong>video and/or audio recorded</strong> for safety, training, and quality assurance</span></div>
+      </div></div>
+    </div>
+    <!-- MA TERMS -->
+    <div id="ma-terms" class="hidden">
+      <div class="dl"><span>Age &amp; Enrollment</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t1')"><span class="ct">Age Restrictions &amp; Class Limits</span><span id="ma-t1-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t1" class="hidden cb">
+        <div class="bul"><span class="ckb">✓</span><span>Must be at least <strong>15 years and 9 months</strong> old to receive credit for classroom sessions</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Must be at least <strong>16 years old</strong> and hold a valid permit to receive credit for driving or observation lessons</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Students may take up to <strong>6 hours of driver's education per day</strong>, only 2 of which can be in-car</span></div>
+        <div class="co co-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#1A7A96;">MA enrollment age is <strong>15 years and 9 months</strong> — different from CT's age 16.</span></div>
+      </div></div>
+      <div class="dl"><span>Digital Classroom Policies</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t2')"><span class="ct">Zoom Class Requirements</span><span id="ma-t2-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t2" class="hidden cb">
+        <div class="bul"><span class="ckb">✓</span><span>Camera on, facing student, and steady throughout class</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Full legal name as it appears on Learner's Permit (nickname allowed after a dash)</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Stationary device with a stable network connection</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Under-18 students: parent/guardian must complete a <strong>2-hour parent class before booking any driving or observation lessons</strong></span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Must pass a <strong>50-question final exam at 80% or higher</strong> — requires completion of Classes 1–15 first</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>All students must sign off on attendance for each class</span></div>
+        <div class="bul"><span class="ckr">✗</span><span>No phones, multitasking, or joining from a moving vehicle</span></div>
+        <div class="co co-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#1A7A96;">MA requires a <strong>50-question final exam at 80%</strong> — CT only requires 10-question quiz per session at 70%.</span></div>
+      </div></div>
+      <div class="dl"><span>Driving Lesson Policies</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t3')"><span class="ct">Cancellations &amp; Tardiness</span><span id="ma-t3-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t3" class="hidden cb">
+        <div class="kv"><span class="kvk">Cancellation notice</span><span class="kvv">24 hours in advance</span></div>
+        <div class="kv"><span class="kvk">Late cancel fee</span><span class="kvv" style="color:#E24B4A;">$100</span></div>
+        <div class="sub-lbl">Lessons Without An Observer</div>
+        <div class="kv"><span class="kvk">Up to 30 min late</span><span class="kvv" style="color:#E24B4A;">$50 fee</span></div>
+        <div class="kv"><span class="kvk">Over 30 min late</span><span class="kvv" style="color:#E24B4A;">Lesson canceled + $190 fee</span></div>
+        <div class="sub-lbl">Lessons With An Observer</div>
+        <div class="kv"><span class="kvk">Up to 15 min late</span><span class="kvv" style="color:#E24B4A;">$50 fee</span></div>
+        <div class="kv"><span class="kvk">Over 15 min late</span><span class="kvv" style="color:#E24B4A;">Lesson canceled + $190 fee</span></div>
+        <div class="kv"><span class="kvk">No-show / unprepared</span><span class="kvv" style="color:#E24B4A;">$190 fee or forfeiture</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t3b')"><span class="ct">Observer Policy</span><span id="ma-t3b-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t3b" class="hidden cb">
+        <div class="bul"><span class="ckb">✓</span><span>If driver student is a no-show, the observer takes on the driver role for the lesson</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Observer must arrive prepared to drive — if unable, <strong>$190 rescheduling fee</strong> applies</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Tardiness fees above also apply to observer students</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t4')"><span class="ct">Required Items For Lessons</span><span id="ma-t4-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t4" class="hidden cb">
+        <div class="bul"><span class="ckb">✓</span><span>Physical permit or driver's license (no photocopies or digital copies)</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Glasses or contacts if required by a B restriction</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Proper footwear — fully enclosed, closed-toe, closed-heel, flat sole sneakers</span></div>
+        <div class="bul"><span class="ckr">✗</span><span>Orthopedic support devices (casts, splints, braces) — <strong>prohibited</strong> from all lessons and road tests</span></div>
+        <div class="co co-r"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#E24B4A" stroke-width="2"/></svg><span style="color:#A32D2D;">Missing any required item = $190 fee and lesson canceled.</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t5')"><span class="ct">Medical Cancellations &amp; Weather</span><span id="ma-t5-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t5" class="hidden cb">
+        <div class="bul"><span class="ckb">✓</span><span>Medical cancellations may be waived with a doctor's note (no specific health details needed)</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Submit note via Student Portal within <strong>2 days</strong> of missed appointment</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Fee waiver reviewed within <strong>3–5 business days</strong></span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Weather cancellations decided by TNS — notified via email/SMS, reschedule via Student Portal</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t6')"><span class="ct">No Parents Or Guardians In Vehicle</span><span id="ma-t6-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t6" class="hidden cb">
+        <div class="bul"><span class="ckr">✗</span><span>No one besides enrolled students or Next Street personnel allowed in the vehicle — <strong>no exceptions</strong></span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t7')"><span class="ct">Late Pick-Up Policy</span><span id="ma-t7-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t7" class="hidden cb">
+        <div class="bul"><span class="ckb">✓</span><span>Instructors will remain with students for a maximum of <strong>15 minutes</strong> after end of lesson</span></div>
+        <div class="bul"><span class="ckr">✗</span><span>If parent/guardian cannot be reached, <strong>local authorities may be contacted</strong></span></div>
+      </div></div>
+      <div class="dl"><span>Road Test Policies</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t8')"><span class="ct">Eligibility</span><span id="ma-t8-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t8" class="hidden cb">
+        <div class="sub-lbl">Teens — Under 18</div>
+        <div class="bul"><span class="ckb">✓</span><span>Hold permit for <strong>6 months</strong> from date of issue, complete Full Driver's Ed, be at least <strong>16½ years old</strong></span></div>
+        <div class="sub-lbl">Adults — 18 And Over</div>
+        <div class="bul"><span class="ckb">✓</span><span>Hold a valid learner's permit + complete at least a <strong>2-hour driving lesson</strong></span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t9')"><span class="ct">Cancellations &amp; No-Shows</span><span id="ma-t9-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t9" class="hidden cb">
+        <div class="kv"><span class="kvk">Cancel by</span><span class="kvv">5 days in advance</span></div>
+        <div class="kv"><span class="kvk">Late cancel fee</span><span class="kvv" style="color:#E24B4A;">$60</span></div>
+        <div class="kv"><span class="kvk">No-show fee</span><span class="kvv" style="color:#E24B4A;">$35 (paid directly to RMV)</span></div>
+        <div class="co co-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#1A7A96;">MA late cancel = <strong>$60</strong> and no-show = <strong>$35 to RMV</strong> — different from CT's $100 late cancel and $40 no-show.</span></div>
+      </div></div>
+      <div class="dl"><span>Completion Certificate (MA)</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t10')"><span class="ct">Certificate Requirements</span><span id="ma-t10-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t10" class="hidden cb">
+        <div class="bul"><span class="ckb">✓</span><span>Pass final exam with a score of <strong>80% or higher</strong></span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Parent or guardian must complete the Parent Class (if under 18)</span></div>
+        <div class="bul"><span class="ckb">✓</span><span>Valid MA permit number, all courses completed, account paid in full</span></div>
+        <div class="co co-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#1A7A96;">Certificates are filed directly with the <strong>RMV</strong> — not sent to the student.</span></div>
+      </div></div>
+      <div class="dl"><span>Account &amp; Payment</span></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t11')"><span class="ct">Refunds &amp; Account Policies</span><span id="ma-t11-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t11" class="hidden cb">
+        <div class="kv"><span class="kvk">Account duration</span><span class="kvv">24 months from class start date</span></div>
+        <div class="kv"><span class="kvk">Bundles</span><span class="kvv" style="color:#E24B4A;">Non-refundable &amp; non-transferable</span></div>
+        <div class="kv"><span class="kvk">À la carte refund</span><span class="kvv">Within 6 months, 10% processing fee</span></div>
+        <div class="kv"><span class="kvk">Gift certificates</span><span class="kvv">Non-refundable, no expiry</span></div>
+      </div></div>
+      <div class="card"><div class="ch" onclick="togCard('ma-t12')"><span class="ct">Recording Policy</span><span id="ma-t12-c" style="color:#aaa;font-size:18px;">+</span></div><div id="ma-t12" class="hidden cb">
+        <div class="bul"><span class="ckb">✓</span><span>All driving lessons, classroom sessions, license tests, and phone calls may be <strong>video and/or audio recorded</strong> for safety, training, and quality assurance</span></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- REFUND ELIGIBILITY -->
+<div id="screen-refund" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">Refund Eligibility</span></div>
+  <div class="content-body">
+    <div class="field-wrap"><span class="field-lbl">Product Type</span><div class="refund-seg"><button class="refund-seg-btn on" id="rbtn-alacarte" onclick="setRefundProd('alacarte')">À La Carte Service</button><button class="refund-seg-btn" id="rbtn-bundle" onclick="setRefundProd('bundle')">Bundle</button></div></div>
+    <div id="bundle-msg" class="hidden"><div class="co co-r" style="margin-bottom:1.1rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#E24B4A" stroke-width="2"/><path d="M12 9v4m0 4h.01" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#A32D2D;"><strong>Bundles are non-refundable and non-transferable</strong> per TNS Terms &amp; Conditions. No refund can be issued regardless of purchase date.</span></div></div>
+    <div id="refund-fields">
+      <div class="field-wrap"><span class="field-lbl">Original Purchase Date</span><input type="date" id="r-date" onchange="clearRefundResult()"/></div>
+      <div class="field-wrap"><span class="field-lbl">Original Purchase Amount ($)</span><div style="position:relative;"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#888;font-size:15px;font-weight:600;">$</span><input type="number" id="r-amount" placeholder="0.00" min="0" step="0.01" onchange="clearRefundResult()"/></div></div>
+      <div class="field-wrap"><span class="field-lbl">Original Payment Method</span><div class="pmt-grid"><button class="pmt-btn on" id="pmt-card" onclick="setRefundPmt('card')">💳 Credit Card</button><button class="pmt-btn" id="pmt-check" onclick="setRefundPmt('check')">📝 Check</button><button class="pmt-btn" id="pmt-cash" onclick="setRefundPmt('cash')">💵 Cash</button></div></div>
+    </div>
+    <button class="calc-btn" onclick="calcRefund()">Calculate Refund Eligibility</button>
+    <div id="refund-result"></div>
+  </div>
+</div>
+
+
+<!-- FAQ -->
+<div id="screen-faq" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">FAQ</span></div>
+  <div class="content-body">
+    <div class="search-wrap" style="padding:0 0 12px 0;">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="11" cy="11" r="8" stroke="#bbb" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#bbb" stroke-width="2" stroke-linecap="round"/></svg>
+        <input type="text" id="faq-s" placeholder="Search FAQs…"/>
+        <button class="s-clear" id="faq-clr">×</button>
+      </div>
+    </div>
+    <div id="faq-list"></div>
+    <div id="faq-empty" style="font-size:14px;color:#888;text-align:center;padding:30px 0;display:none;">No results found.</div>
+  </div>
+</div>
+
+<!-- AGENT TRAINING -->
+<div id="screen-training" class="screen">
+  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">Agent Training</span></div>
+  <div class="content-body">
+    <div class="co co-b" style="margin-bottom:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#1A7A96;">These guides apply to all agents regardless of state. Tap any section to expand.</span></div>
+
+    <!-- CALL SCRIPTS -->
+    <div class="dl"><span>Call Scripts</span></div>
+
+    <!-- ASD -->
+    <div class="card">
+      <div class="ch" onclick="togCard('tr-asd')"><span class="ct">Students On The Autism Spectrum (ASD)</span><span id="tr-asd-c" style="color:#aaa;font-size:18px;">+</span></div>
+      <div id="tr-asd" class="hidden cb">
+        <p style="font-size:13px;color:#555;margin-bottom:12px;">Use this script when a parent calls about driving lessons for a student on the autism spectrum. Focus on empathy, safety screening, and matching the right instructor.</p>
+
+        <div class="sub-lbl">Step 1 — Opening</div>
+        <div style="background:#F5F4F0;border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:10px;">
+          <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Say This</div>
+          <p><em>"Absolutely — thank you for sharing that. Our instructors work with many different learning styles and comfort levels."</em></p>
+        </div>
+
+        <div class="sub-lbl">Step 2 — Screening Questions</div>
+        <div style="background:#F5F4F0;border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:10px;">
+          <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Say This</div>
+          <p><em>"Before we schedule, can I confirm a couple quick things: does your student have their learner's permit, and are they generally able to stay comfortable and follow the instructor's directions for a full lesson? And are there any safety concerns or past experiences you'd like us to know about?"</em></p>
+        </div>
+        <div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;">Goal: Confirm permit status, lesson readiness, and safety considerations before booking.</span></div>
+
+        <div class="sub-lbl" style="margin-top:12px;">Decision Pathways</div>
+
+        <div style="border:1px solid #73BF45;border-radius:8px;overflow:hidden;margin-bottom:8px;">
+          <div style="background:#3B3B3B;padding:8px 12px;font-size:11px;font-weight:700;color:#73BF45;text-transform:uppercase;letter-spacing:.05em;">A — Student Is Ready (Permit + Comfortable + No Safety Concerns)</div>
+          <div style="padding:10px 12px;font-size:13px;color:#555;">
+            <p style="margin-bottom:8px;">Ask about driving experience: <em>"Have they driven at all in a parking lot or quiet neighborhood?"</em></p>
+            <div class="bul"><div style="width:5px;height:5px;border-radius:50%;background:#73BF45;margin-top:5px;flex-shrink:0;"></div><span><strong>No experience yet:</strong> "No problem — we can begin with a calm first lesson focused on comfort, basics, and step-by-step coaching."</span></div>
+            <div class="bul"><div style="width:5px;height:5px;border-radius:50%;background:#73BF45;margin-top:5px;flex-shrink:0;"></div><span><strong>Some experience:</strong> "We'll start from where they are and build confidence from there."</span></div>
+            <div style="margin-top:8px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;">Next Steps</div>
+            <div class="bul" style="margin-top:6px;"><span class="ck">✓</span><span>Proceed with scheduling, add notes to student account, inform instructor</span></div>
+          </div>
+        </div>
+
+        <div style="border:1px solid #F58A21;border-radius:8px;overflow:hidden;margin-bottom:8px;">
+          <div style="background:#3B3B3B;padding:8px 12px;font-size:11px;font-weight:700;color:#F58A21;text-transform:uppercase;letter-spacing:.05em;">B — Permit Yes, But Student Gets Anxious Or Overwhelmed</div>
+          <div style="padding:10px 12px;font-size:13px;color:#555;">
+            <p style="margin-bottom:8px;"><em>"Are there any situations that tend to feel overwhelming — like heavy traffic, highways, busy intersections, or lots of directions at once?"</em></p>
+            <p style="margin-bottom:8px;"><em>"We can start at a manageable pace and build up as they gain confidence."</em></p>
+            <div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;">Next Steps</div>
+            <div class="bul" style="margin-top:6px;"><span class="ck">✓</span><span>Proceed with scheduling, add notes, inform instructor</span></div>
+          </div>
+        </div>
+
+        <div style="border:1px solid #E24B4A;border-radius:8px;overflow:hidden;margin-bottom:8px;">
+          <div style="background:#3B3B3B;padding:8px 12px;font-size:11px;font-weight:700;color:#E24B4A;text-transform:uppercase;letter-spacing:.05em;">D — Safety Concerns / Extreme Reactions (Escalation Required)</div>
+          <div style="padding:10px 12px;font-size:13px;color:#555;">
+            <p style="margin-bottom:6px;font-size:12px;color:#888;">Examples: panic attacks, aggression, refusing to stay in car, inability to follow directions</p>
+            <p style="margin-bottom:8px;"><em>"To make sure we support your student in the safest way possible, I'm going to take down your information and give you a call back. I want to ensure we match them with the right instructor."</em></p>
+            <div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;">Next Steps</div>
+            <div class="bul" style="margin-top:6px;"><span class="ckr">!</span><span>Create a <strong>Teams post in Scheduling</strong> with parent's details and key concerns</span></div>
+            <div class="bul"><span class="ckr">!</span><span><strong>Tag RM</strong> to advise which instructor to schedule with</span></div>
+            <div class="bul"><span class="ckr">!</span><span>Add notes if student already has an account</span></div>
+          </div>
+        </div>
+
+        <div style="border:1px solid #E24B4A;border-radius:8px;overflow:hidden;margin-bottom:8px;">
+          <div style="background:#3B3B3B;padding:8px 12px;font-size:11px;font-weight:700;color:#E24B4A;text-transform:uppercase;letter-spacing:.05em;">E — Student Tried Lessons Before And It Went Badly (Escalation Required)</div>
+          <div style="padding:10px 12px;font-size:13px;color:#555;">
+            <p style="margin-bottom:8px;">Pinpoint what happened: <em>"What part was most challenging — the instructor's coaching style, anxiety during the lesson, or certain driving situations like traffic or turning?"</em></p>
+            <p style="margin-bottom:8px;"><em>"We can absolutely use that to make a better plan and help them restart with a more comfortable approach."</em></p>
+            <div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;">Next Steps</div>
+            <div class="bul" style="margin-top:6px;"><span class="ckr">!</span><span>Create <strong>Teams post in Scheduling</strong> with what happened previously, <strong>tag RM</strong></span></div>
+          </div>
+        </div>
+
+        <div class="sub-lbl">Universal Closing (Any Branch)</div>
+        <div style="background:#F5F4F0;border-radius:8px;padding:10px 12px;font-size:13px;">
+          <p><em>"Thank you for sharing all of that. Based on what you told me, the best next step is to take down your information and give you a call back. I want to ensure we match them with the right instructor."</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORT GUIDELINES -->
+    <div class="dl" style="margin-top:4px;"><span>Support Guidelines</span></div>
+
+    <!-- CUSTOMER LANGUAGE -->
+    <div class="card">
+      <div class="ch" onclick="togCard('tr-lang')"><span class="ct">Customer Language &amp; Company Representation</span><span id="tr-lang-c" style="color:#aaa;font-size:18px;">+</span></div>
+      <div id="tr-lang" class="hidden cb">
+        <p style="font-size:13px;color:#555;margin-bottom:12px;">Always speak <strong>as</strong> the company — use first-person plural at all times.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div style="background:#FFF5F5;border:1px solid #E24B4A;border-radius:8px;padding:10px;">
+            <div style="font-size:10px;font-weight:700;color:#E24B4A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">❌ Avoid</div>
+            <div style="font-size:12px;color:#555;line-height:1.6;">"They will get back to you."<br>"They don't allow that."<br>"They're working on it."</div>
+          </div>
+          <div style="background:#F4FBF0;border:1px solid #73BF45;border-radius:8px;padding:10px;">
+            <div style="font-size:10px;font-weight:700;color:#3B6D11;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">✓ Use Instead</div>
+            <div style="font-size:12px;color:#555;line-height:1.6;">"We can help you with that."<br>"We are reviewing your request."<br>"Our team will follow up."</div>
+          </div>
+        </div>
+        <div class="co co-o"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;">Third-person may only be used when clearly referring to a separate entity — e.g. "The state agency sets that requirement." When in doubt, default to <strong>"we."</strong></span></div>
+      </div>
+    </div>
+
+    <!-- KEY POINTERS -->
+    <div class="card">
+      <div class="ch" onclick="togCard('tr-tips')"><span class="ct">Key Pointers For Effective Interactions</span><span id="tr-tips-c" style="color:#aaa;font-size:18px;">+</span></div>
+      <div id="tr-tips" class="hidden cb">
+        <div class="bul"><span class="ck">1</span><span><strong>Stick to what the customer needs to know.</strong> Avoid over-explaining internal processes — share only what impacts their next steps.</span></div>
+        <div class="bul"><span class="ck">2</span><span><strong>Don't read internal notes out loud.</strong> Notes contain jargon. Summarize the relevant outcome in plain terms instead.</span></div>
+        <div class="bul"><span class="ck">3</span><span><strong>Avoid thinking out loud.</strong> Silence while navigating is fine. Use short transitions: <em>"Give me a quick moment while I pull that up."</em></span></div>
+        <div class="bul"><span class="ck">4</span><span><strong>Avoid announcing leadership decisions.</strong> Don't say "my manager said…" — present it as a unified team action: <em>"We're taking care of it for you."</em></span></div>
+        <div class="bul"><span class="ck">5</span><span><strong>Be purposeful with questions.</strong> Ask only what's immediately useful. <em>"Can you confirm the email you used to register?"</em> beats <em>"Did you register online or in person?"</em></span></div>
+        <div class="bul"><span class="ck">6</span><span><strong>Trim call length.</strong> Resolve and close as efficiently as possible. If the issue is solved, wrap up politely and confidently.</span></div>
+
+        <div class="sub-lbl" style="margin-top:10px;">Script Improvements</div>
+        <div style="border-radius:8px;overflow:hidden;border:1px solid #eee;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;background:#3B3B3B;padding:8px 12px;gap:8px;">
+            <div style="font-size:10px;font-weight:700;color:#E24B4A;text-transform:uppercase;letter-spacing:.05em;">Instead Of…</div>
+            <div style="font-size:10px;font-weight:700;color:#73BF45;text-transform:uppercase;letter-spacing:.05em;">Try This</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;padding:10px 12px;border-bottom:1px solid #f0f0f0;gap:8px;font-size:12px;color:#555;">
+            <div><em>"I'm just going to pull your account, check the notes, and see if there's a payment there. One moment."</em></div>
+            <div><em>"Let me quickly check your account — one moment."</em></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;padding:10px 12px;border-bottom:1px solid #f0f0f0;gap:8px;font-size:12px;color:#555;">
+            <div><em>"Our manager said she's reviewing it and will maybe follow up tomorrow if she can get to it."</em></div>
+            <div><em>"We've flagged this for follow-up and will update you as soon as possible."</em></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;padding:10px 12px;gap:8px;font-size:12px;color:#555;">
+            <div><em>"Hmm, let me see… okay, so there's a note here from a few days ago…"</em></div>
+            <div style="color:#888;font-style:italic;">No need to narrate — silently review and summarize relevant info if needed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HANDLING ESCALATIONS -->
+    <div class="card">
+      <div class="ch" onclick="togCard('tr-esc')"><span class="ct">Handling Escalations</span><span id="tr-esc-c" style="color:#aaa;font-size:18px;">+</span></div>
+      <div id="tr-esc" class="hidden cb">
+        <div class="bul"><span class="ck">1</span><span><strong>Stay calm &amp; professional.</strong> Remain composed — customers may be frustrated with the policy, not with you.</span></div>
+        <div class="bul"><span class="ck">2</span><span><strong>Use empathy first.</strong> <em>"I completely understand that this is frustrating, and I appreciate you reaching out to discuss it."</em> Let them express frustration before responding.</span></div>
+        <div class="bul"><span class="ck">3</span><span><strong>Restate the policy with confidence.</strong> <em>"Our policy requires at least 24 hours' notice for cancellations, which is why the fee has been applied."</em> Apologize for the situation, not the policy.</span></div>
+        <div class="bul"><span class="ck">4</span><span><strong>Offer solutions within your authority.</strong> Options may include: forfeit the lesson instead of paying the fee, reschedule, or confirm future reminders are set up.</span></div>
+        <div class="bul"><span class="ck">5</span><span><strong>Avoid immediate manager escalations.</strong> De-escalate first: <em>"Our leadership team follows the same policies I've shared, but I want to make sure we explore all possible solutions first."</em> Offer a callback instead of an immediate transfer.</span></div>
+        <div class="bul"><span class="ck">6</span><span><strong>If escalation is inevitable,</strong> gather: customer name &amp; contact info, lesson date &amp; reason for dispute, and previous conversations. Then: <em>"I will submit your request for review, and a manager will get back to you within two business days."</em></span></div>
+        <div class="bul"><span class="ck">7</span><span><strong>Close on a positive note.</strong> Summarize next steps and thank the customer: <em>"I truly appreciate you reaching out. Please let us know if there's anything else we can do to support you."</em></span></div>
+      </div>
+    </div>
+
+    <!-- LATE ARRIVALS / EARLY DEPARTURES -->
+    <div class="card">
+      <div class="ch" onclick="togCard('tr-late')"><span class="ct">Late Arrivals &amp; Early Departures</span><span id="tr-late-c" style="color:#aaa;font-size:18px;">+</span></div>
+      <div id="tr-late" class="hidden cb">
+        <p style="font-size:13px;color:#555;margin-bottom:12px;">When a student arrives late or leaves early, present both options clearly and document their choice.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div style="background:#F0F8FB;border:1px solid #29A3BD;border-radius:8px;padding:10px;">
+            <div style="font-size:10px;font-weight:700;color:#1A7A96;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Option 1</div>
+            <div style="font-size:12px;font-weight:700;color:#3B3B3B;margin-bottom:4px;">Pay Fee &amp; Make Up Time</div>
+            <div style="font-size:12px;color:#555;">Pay the partial lesson fee ($50) to reschedule and make up the missed time.</div>
+          </div>
+          <div style="background:#F5F4F0;border:1px solid #ddd;border-radius:8px;padding:10px;">
+            <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Option 2</div>
+            <div style="font-size:12px;font-weight:700;color:#3B3B3B;margin-bottom:4px;">Forfeit Time, No Fee</div>
+            <div style="font-size:12px;color:#555;">Waive the fee and accept the reduced lesson — missed time will not be recovered.</div>
+          </div>
+        </div>
+        <div class="co co-r"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#E24B4A" stroke-width="2"/></svg><span style="color:#A32D2D;">For minors or students working toward a certificate, forfeiting time <strong>may impact testing eligibility</strong>. Make sure they understand this before deciding.</span></div>
+        <div class="sub-lbl" style="margin-top:10px;">Example — Susie Arrived 30 Minutes Late</div>
+        <div style="background:#F5F4F0;border-radius:8px;padding:10px 12px;font-size:13px;color:#555;">
+          <p>Susie was scheduled for a <strong>120-minute lesson</strong> but only completed <strong>90 minutes</strong>.</p>
+          <div class="bul" style="margin-top:8px;"><span class="ck">→</span><span><strong>Option 1:</strong> Pay <strong>$50</strong> to reschedule the 30 minutes she missed.</span></div>
+          <div class="bul"><span class="ck">→</span><span><strong>Option 2:</strong> Forfeit the 30 minutes — no additional charge, no make-up.</span></div>
+        </div>
+        <div class="co co-o" style="margin-top:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;">Always document the student's choice. If unsure how to handle a situation, escalate to your Squad Leader.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- end #app -->
+<script>
+// NAV
+function goTo(s){document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('active');});document.getElementById('screen-'+s).classList.add('active');window.scrollTo(0,0);if(s==='ct-locations')renderCTLocs();if(s==='ma-locations')renderMALocs();if(s==='eligibility')initCalc();}
+function goHome(){document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('active');});document.getElementById('screen-home').classList.add('active');window.scrollTo(0,0);}
+function togAcc(s){var p=document.getElementById(s+'-panel'),c=document.getElementById(s+'-chev'),o=p.classList.contains('open');p.classList.toggle('open',!o);c.classList.toggle('open',!o);}
+function togCard(id){var el=document.getElementById(id),c=document.getElementById(id+'-c'),open=el.classList.contains('hidden');el.classList.toggle('hidden',!open);if(c)c.textContent=open?'−':'+';}
+// TERMS STATE
+function setTermsState(s){var isCT=s==='CT';document.getElementById('btn-terms-ct').className='terms-seg-btn'+(isCT?' ao':'');document.getElementById('btn-terms-ma').className='terms-seg-btn'+(!isCT?' ab':'');document.getElementById('ct-terms').classList.toggle('hidden',!isCT);document.getElementById('ma-terms').classList.toggle('hidden',isCT);}
+// LOCATION DATA
+var CT_TEST=['Avon','Cheshire','Danbury','Enfield','Fairfield','Farmington','Glastonbury','Guilford','Hamden','Monroe','Norwalk','Old Saybrook','Orange','Seymour','Southbury','Torrington','Wallingford','Waterford','Watertown','Willimantic'];
+var CT_LOCS=[{n:'Avon',a:'395 West Avon Rd.',z:'06001',lat:41.7921,lng:-72.8551},{n:'Bloomfield',a:'3 Barnard Lane',z:'06002',lat:41.8279,lng:-72.7248},{n:'Bristol',a:'421 North Main St.',z:'06010',lat:41.6718,lng:-72.9493},{n:'Brookfield',a:'487 Federal Rd.',z:'06804',lat:41.4695,lng:-73.4079},{n:'Cheshire',a:'138 South Main St.',z:'06410',lat:41.4987,lng:-72.9015},{n:'Danbury',a:'24 Shelter Rock Rd.',z:'06810',lat:41.3948,lng:-73.4540},{n:'East Berlin',a:'1224 Mill St',z:'06023',lat:41.6112,lng:-72.7276},{n:'East Haven',a:'365 Hemingway Ave',z:'06512',lat:41.2762,lng:-72.8687},{n:'Enfield',a:'155 Hazard Ave',z:'06082',lat:41.9762,lng:-72.5918},{n:'Fairfield',a:'501 Kings Highway E',z:'06825',lat:41.1401,lng:-73.2637},{n:'Farmington',a:'5 Forest Park Dr',z:'06032',lat:41.7165,lng:-72.8332},{n:'Glastonbury',a:'160 Oak Street',z:'06033',lat:41.7023,lng:-72.6079},{n:'Granby HS',a:'315 Salmon Brook St.',z:'06035',lat:41.9565,lng:-72.8287},{n:'Greenwich',a:'257 Sound Beach Ave',z:'06830',lat:41.0262,lng:-73.5768},{n:'Guilford',a:'2351 Boston Post Rd',z:'06437',lat:41.2887,lng:-72.6779},{n:'Hamden',a:'1944 State St',z:'06517',lat:41.3959,lng:-72.8979},{n:'Hartford',a:'30 Arbor St. 2nd Fl.',z:'06106',lat:41.7637,lng:-72.6851},{n:'Holy Cross HS',a:'587 Oronoke Rd.',z:'06708',lat:41.5576,lng:-73.0474},{n:'Housatonic HS',a:'246 Warren Turnpike Rd.',z:'06031',lat:41.9698,lng:-73.3645},{n:'Lakeview HS',a:'98 Wamogo Rd.',z:'06759',lat:41.7337,lng:-73.1129},{n:'Madison',a:'1353 Boston Post Rd',z:'06443',lat:41.2793,lng:-72.5990},{n:'Manchester',a:'730 Main Street',z:'06040',lat:41.7762,lng:-72.5215},{n:'Mansfield',a:'1734 Storrs Rd',z:'06268',lat:41.8032,lng:-72.2326},{n:'Middletown',a:'62 Washington St.',z:'06457',lat:41.5623,lng:-72.6506},{n:'Milford',a:'73 Golden Hill St',z:'06460',lat:41.2276,lng:-73.0579},{n:'Monroe',a:'435 Main St.',z:'06468',lat:41.3373,lng:-73.2004},{n:'Naugatuck',a:'333 Church St',z:'06477',lat:41.4859,lng:-73.0509},{n:'New Britain',a:'130 W Main St',z:'06052',lat:41.6618,lng:-72.7801},{n:'New London',a:'75 Granite St',z:'06320',lat:41.3554,lng:-72.0995},{n:'New Milford',a:'27 Main St.',z:'06776',lat:41.5776,lng:-73.4079},{n:'Newington',a:'95 Fenn Road',z:'06111',lat:41.6951,lng:-72.7262},{n:'Newtown',a:'33 Main St',z:'06470',lat:41.4137,lng:-73.2951},{n:'Niantic',a:'8 W Main Street',z:'06357',lat:41.3237,lng:-72.1926},{n:'Norwalk',a:'430 Main Ave.',z:'06851',lat:41.1176,lng:-73.4137},{n:'Norwich',a:'207 West Town St',z:'06360',lat:41.5240,lng:-72.0779},{n:'Old Saybrook',a:'139 Mill Rock Rd E',z:'06475',lat:41.2926,lng:-72.3765},{n:'Orange',a:'501 Boston Post Rd.',z:'06477',lat:41.2801,lng:-73.0279},{n:'Redding',a:'12 Old Mill Rd.',z:'06896',lat:41.3037,lng:-73.3901},{n:'Rocky Hill',a:'156 New Britain Ave',z:'06067',lat:41.6623,lng:-72.6526},{n:'Seymour',a:'25 Deforest St',z:'06483',lat:41.3948,lng:-73.0726},{n:'Shelton',a:'215 Coram Ave',z:'06484',lat:41.3162,lng:-73.0901},{n:'Simsbury',a:'924 Hopmeadow St',z:'06070',lat:41.8751,lng:-72.8087},{n:'Southbury',a:'1455 Southford Rd.',z:'06488',lat:41.4826,lng:-73.2151},{n:'Southington',a:'27 Meriden Ave',z:'06489',lat:41.5976,lng:-72.8776},{n:'Stamford',a:'1177 High Ridge Rd',z:'06905',lat:41.0901,lng:-73.5537},{n:'Stratford',a:'1166 Barnum Ave',z:'06614',lat:41.1848,lng:-73.1226},{n:'Terryville HS',a:'33 N Harwinton Ave.',z:'06786',lat:41.6787,lng:-73.0015},{n:'Torrington',a:'461 Winsted Rd',z:'06790',lat:41.8009,lng:-73.1226},{n:'Vernon',a:'280 Talcottville Road',z:'06066',lat:41.8362,lng:-72.4751},{n:'Wallingford',a:'950 Yale Ave',z:'06492',lat:41.4573,lng:-72.8226},{n:'Waterbury',a:'1068 West Main St',z:'06708',lat:41.5579,lng:-73.0576},{n:'Waterford',a:'31 Boston Post Rd',z:'06385',lat:41.3487,lng:-72.1526},{n:'Watertown',a:'1175 Main St.',z:'06795',lat:41.6026,lng:-73.1165},{n:'West Hartford',a:'41 N Main Street',z:'06107',lat:41.7623,lng:-72.7415},{n:'Westport',a:'877 Post Rd. East',z:'06880',lat:41.1337,lng:-73.3576},{n:'Willimantic',a:'90 S Park St',z:'06226',lat:41.7087,lng:-72.2076},{n:'Windsor HS',a:'50 Sage Park Road',z:'06095',lat:41.8526,lng:-72.6451},{n:'Wolcott',a:'421 Wolcott Rd',z:'06716',lat:41.5987,lng:-72.9801}];
+var MA_FULL=[{n:'Amherst',a:'6 University Drive',z:'01002',lat:42.3732,lng:-72.5199},{n:'Greenfield',a:'91 Main Street',z:'01301',lat:42.5876,lng:-72.5990},{n:'Holyoke',a:'4 Open Square Way - Mill 4',z:'01040',lat:42.2043,lng:-72.6162},{n:'Leominster',a:'435 Lancaster St.',z:'01453',lat:42.5251,lng:-71.7590},{n:'Marlborough',a:'221 Boston Post Rd E',z:'01752',lat:42.3476,lng:-71.5562},{n:'Natick',a:'209 W Central Street',z:'01760',lat:42.2837,lng:-71.3490},{n:'Northampton',a:'123 Hawley Street',z:'01060',lat:42.3251,lng:-72.6412},{n:'West Springfield',a:'68 Baldwin Street',z:'01089',lat:42.1015,lng:-72.6526},{n:'Worcester',a:'120 Stafford Street, Suite 206',z:'01603',lat:42.2626,lng:-71.8162}];
+var MA_PICKUP=[{n:'Chicopee',a:'48 Center Street',z:'01013',lat:42.1487,lng:-72.6076},{n:'Framingham',a:'1071 Worcester Rd',z:'01701',lat:42.3048,lng:-71.4362},{n:'Longmeadow',a:'1200 Converse Street',z:'01106',lat:42.0501,lng:-72.5826},{n:'Shrewsbury',a:'364 Boston Turnpike',z:'01545',lat:42.2976,lng:-71.7176},{n:'Southbridge',a:'368 Main St',z:'01550',lat:42.0751,lng:-72.0326}];
+var ZIP={'06001':{lat:41.7921,lng:-72.8551},'06002':{lat:41.8279,lng:-72.7248},'06010':{lat:41.6718,lng:-72.9493},'06023':{lat:41.6112,lng:-72.7276},'06032':{lat:41.7165,lng:-72.8332},'06033':{lat:41.7023,lng:-72.6079},'06035':{lat:41.9565,lng:-72.8287},'06040':{lat:41.7762,lng:-72.5215},'06052':{lat:41.6618,lng:-72.7801},'06066':{lat:41.8362,lng:-72.4751},'06067':{lat:41.6623,lng:-72.6526},'06070':{lat:41.8751,lng:-72.8087},'06082':{lat:41.9762,lng:-72.5918},'06095':{lat:41.8526,lng:-72.6451},'06106':{lat:41.7637,lng:-72.6851},'06107':{lat:41.7623,lng:-72.7415},'06111':{lat:41.6951,lng:-72.7262},'06226':{lat:41.7087,lng:-72.2076},'06268':{lat:41.8032,lng:-72.2326},'06320':{lat:41.3554,lng:-72.0995},'06357':{lat:41.3237,lng:-72.1926},'06360':{lat:41.5240,lng:-72.0779},'06385':{lat:41.3487,lng:-72.1526},'06410':{lat:41.4987,lng:-72.9015},'06437':{lat:41.2887,lng:-72.6779},'06443':{lat:41.2793,lng:-72.5990},'06457':{lat:41.5623,lng:-72.6506},'06460':{lat:41.2276,lng:-73.0579},'06468':{lat:41.3373,lng:-73.2004},'06470':{lat:41.4137,lng:-73.2951},'06475':{lat:41.2926,lng:-72.3765},'06477':{lat:41.4859,lng:-73.0509},'06483':{lat:41.3948,lng:-73.0726},'06484':{lat:41.3162,lng:-73.0901},'06488':{lat:41.4826,lng:-73.2151},'06489':{lat:41.5976,lng:-72.8776},'06492':{lat:41.4573,lng:-72.8226},'06512':{lat:41.2762,lng:-72.8687},'06517':{lat:41.3959,lng:-72.8979},'06614':{lat:41.1848,lng:-73.1226},'06702':{lat:41.5579,lng:-73.0576},'06708':{lat:41.5576,lng:-73.0474},'06716':{lat:41.5987,lng:-72.9801},'06759':{lat:41.7337,lng:-73.1129},'06776':{lat:41.5776,lng:-73.4079},'06786':{lat:41.6787,lng:-73.0015},'06790':{lat:41.8009,lng:-73.1226},'06795':{lat:41.6026,lng:-73.1165},'06804':{lat:41.4695,lng:-73.4079},'06810':{lat:41.3948,lng:-73.4540},'06825':{lat:41.1401,lng:-73.2637},'06830':{lat:41.0262,lng:-73.5768},'06851':{lat:41.1176,lng:-73.4137},'06880':{lat:41.1337,lng:-73.3576},'06896':{lat:41.3037,lng:-73.3901},'06905':{lat:41.0901,lng:-73.5537},'01002':{lat:42.3732,lng:-72.5199},'01013':{lat:42.1487,lng:-72.6076},'01040':{lat:42.2043,lng:-72.6162},'01060':{lat:42.3251,lng:-72.6412},'01089':{lat:42.1015,lng:-72.6526},'01106':{lat:42.0501,lng:-72.5826},'01301':{lat:42.5876,lng:-72.5990},'01453':{lat:42.5251,lng:-71.7590},'01545':{lat:42.2976,lng:-71.7176},'01550':{lat:42.0751,lng:-72.0326},'01603':{lat:42.2626,lng:-71.8162},'01701':{lat:42.3048,lng:-71.4362},'01752':{lat:42.3476,lng:-71.5562},'01760':{lat:42.2837,lng:-71.3490},'01801':{lat:42.4801,lng:-71.1501},'01850':{lat:42.6426,lng:-71.3176}};
+function deg2rad(d){return d*Math.PI/180;}
+function hav(a,b,c,d){var R=3958.8,x=deg2rad(c-a),y=deg2rad(d-b),q=Math.sin(x/2)*Math.sin(x/2)+Math.cos(deg2rad(a))*Math.cos(deg2rad(c))*Math.sin(y/2)*Math.sin(y/2);return R*2*Math.atan2(Math.sqrt(q),Math.sqrt(1-q));}
+function ctLocCard(l,dist){var test=CT_TEST.indexOf(l.n)!==-1,dot=test?'#F58A21':'#bbb',badge=test?'<span class="tag-test">✓ TNS License Test</span>':'',db=dist!==null?'<div class="loc-dist" style="background:#FEF3E4;color:#C46D10;">'+dist.toFixed(1)+' mi</div>':'';return '<div class="loc-card'+(test?' test-loc':'')+'"><div class="loc-dot" style="background:'+dot+';"></div><div style="flex:1;"><div class="loc-name">'+l.n+'</div><div class="loc-addr">'+l.a+', CT '+l.z+'</div>'+badge+'</div>'+db+'</div>';}
+function maLocCard(l,dist,type){var isFull=type==='full',dot=isFull?'#29A3BD':'#999',tag=isFull?'<span class="loc-type-full">Full Service</span>':'<span class="loc-type-pickup">Pickup / Drop-off Only</span>',db=dist!==null?'<div class="loc-dist" style="background:#E0F4FA;color:#1A7A96;">'+dist.toFixed(1)+' mi</div>':'';return '<div class="loc-card"><div class="loc-dot" style="background:'+dot+';"></div><div style="flex:1;"><div class="loc-name">'+l.n+'</div><div class="loc-addr">'+l.a+', MA '+l.z+'</div>'+tag+'</div>'+db+'</div>';}
+function renderCTLocs(){document.getElementById('ct-all-locs').innerHTML=CT_LOCS.map(function(l){return ctLocCard(l,null);}).join('');var btn=document.getElementById('ct-zip-btn');btn.onclick=function(){var zip=document.getElementById('ct-zip').value.replace(/\D/g,''),el=document.getElementById('ct-zip-res');if(zip.length!==5){el.innerHTML='<div style="font-size:13px;color:#E24B4A;padding:6px 0;">Please enter a valid 5-digit zip code.</div>';return;}var zd=ZIP[zip];if(!zd){el.innerHTML='<div style="font-size:13px;color:#888;padding:6px 0;">Zip code not found. Browse all locations below.</div>';return;}var sc=CT_LOCS.map(function(l){return{l:l,d:hav(zd.lat,zd.lng,l.lat,l.lng)};}).sort(function(a,b){return a.d-b.d;}).slice(0,5);el.innerHTML='<div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;">5 Closest To '+zip+'</div>'+sc.map(function(r){return ctLocCard(r.l,r.d);}).join('');};document.getElementById('ct-zip').onkeydown=function(e){if(e.key==='Enter')btn.onclick();};}
+function renderMALocs(){document.getElementById('ma-full-locs').innerHTML=MA_FULL.map(function(l){return maLocCard(l,null,'full');}).join('');document.getElementById('ma-pickup-locs').innerHTML=MA_PICKUP.map(function(l){return maLocCard(l,null,'pickup');}).join('');var btn=document.getElementById('ma-zip-btn');btn.onclick=function(){var zip=document.getElementById('ma-zip').value.replace(/\D/g,''),el=document.getElementById('ma-zip-res');if(zip.length!==5){el.innerHTML='<div style="font-size:13px;color:#E24B4A;padding:6px 0;">Please enter a valid 5-digit zip code.</div>';return;}var zd=ZIP[zip];if(!zd){el.innerHTML='<div style="font-size:13px;color:#888;padding:6px 0;">Zip code not found. Browse all locations below.</div>';return;}var all=MA_FULL.map(function(l){return{l:l,d:hav(zd.lat,zd.lng,l.lat,l.lng),t:'full'};}).concat(MA_PICKUP.map(function(l){return{l:l,d:hav(zd.lat,zd.lng,l.lat,l.lng),t:'pickup'};}));all.sort(function(a,b){return a.d-b.d;});el.innerHTML='<div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;">5 Closest To '+zip+'</div>'+all.slice(0,5).map(function(r){return maLocCard(r.l,r.d,r.t);}).join('');};document.getElementById('ma-zip').onkeydown=function(e){if(e.key==='Enter')btn.onclick();};}
+// ELIGIBILITY CALC
+var calcSt='CT',calcCo='full',maTestTy='tns';
+function initCalc(){document.getElementById('elig-policy').classList.add('hidden');document.getElementById('ct-policy-wrap').classList.remove('hidden');document.getElementById('ma-policy-wrap').classList.add('hidden');setCalcState('CT');setCalcCourse('full');document.getElementById('elig-result').innerHTML='';}
+function setCalcState(s){calcSt=s;document.getElementById('btn-ct').className='seg-btn'+(s==='CT'?' ao':'');document.getElementById('btn-ma').className='seg-btn'+(s==='MA'?' ao':'');document.getElementById('course-grp').classList.toggle('hidden',s==='MA');document.getElementById('ct-policy-wrap').classList.toggle('hidden',s!=='CT');document.getElementById('ma-policy-wrap').classList.toggle('hidden',s!=='MA');calcElig();}
+function setCalcCourse(c){calcCo=c;document.getElementById('btn-full').className='seg-btn'+(c==='full'?' ao':'');document.getElementById('btn-8hr').className='seg-btn'+(c==='8hr'?' ao':'');calcElig();}
+function addD(d,n){var r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function subD(d,n){var r=new Date(d);r.setDate(r.getDate()-n);return r;}
+function fmtDate(d){return d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
+function fmtShort(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function ageAt(dob,ref){return Math.floor((ref-dob)/(365.25*24*3600*1000));}
+function daysUntil(t){var n=new Date();n.setHours(0,0,0,0);return Math.ceil((t-n)/(24*3600*1000));}
+function calcElig(){var dv=document.getElementById('e-dob').value,pv=document.getElementById('e-permit').value,area=document.getElementById('elig-result');if(!dv||!pv){area.innerHTML='';return;}var dob=new Date(dv+'T00:00:00'),permit=new Date(pv+'T00:00:00'),today=new Date();today.setHours(0,0,0,0);var aop=ageAt(dob,permit),atod=ageAt(dob,today),hold,rule,elig;if(calcSt==='CT'){if(aop>=18){hold=90;rule='Adult (18+) — 90-day permit hold required';}else if(calcCo==='full'){hold=120;rule='Teen with full course — 120-day hold';}else{hold=180;rule='Teen with 8-hour course — 180-day hold';}elig=addD(permit,hold);}else{if(aop>=18){hold=0;rule='Adult (18+) in MA — no mandatory permit hold period';elig=new Date(permit);}else{hold=184;rule='Junior operator (under 18) — 184-day permit hold required';elig=addD(permit,hold);}}document.getElementById('elig-policy').classList.remove('hidden');var ok=elig<=today,dl=daysUntil(elig),bg=ok?'#EDF7EE':'#FEF3E4',bdr=ok?'#73BF45':'#F58A21',ac=ok?'#3B6D11':'#C46D10',sub=!ok?dl+' day'+(dl!==1?'s':'')+' remaining':hold>0?'Permit hold requirement met':'Eligible as of permit issue date';area.innerHTML='<div class="elig-card" style="background:'+bg+';border:2px solid '+bdr+';"><div style="display:inline-block;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;margin-bottom:10px;background:'+(ok?'#73BF45':'#F58A21')+';color:#fff;">'+(ok?'Eligible Now':'Not Yet Eligible')+'</div><div style="font-size:10px;font-weight:700;color:#888;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Testing Eligible Date</div><div style="font-size:20px;font-weight:700;color:#3B3B3B;margin-bottom:4px;">'+fmtDate(elig)+'</div><div style="font-size:13px;color:'+ac+';font-weight:700;margin-bottom:10px;">'+sub+'</div><div style="font-size:12px;color:#555;padding-top:10px;border-top:1px solid '+bdr+';opacity:.8;">'+rule+'</div></div><div class="stat-row"><div class="stat-box"><div class="stat-lbl">Age At Permit</div><div class="stat-val">'+aop+'</div></div><div class="stat-box"><div class="stat-lbl">Current Age</div><div class="stat-val">'+atod+'</div></div><div class="stat-box"><div class="stat-lbl">Hold Period</div><div class="stat-val">'+(hold>0?hold+'d':'None')+'</div></div></div>';}
+function setCTTab(t){['state','tns','fees','pass','fail'].forEach(function(x){var a=x===t;document.getElementById('ct-tab-'+x).classList.toggle('active',a);document.getElementById('ct-tab-c-'+x).classList.toggle('hidden',!a);});}
+function setMATab(t){['state','tns','fees','pass','fail'].forEach(function(x){var a=x===t;document.getElementById('ma-tab-'+x).classList.toggle('active',a);document.getElementById('ma-tab-c-'+x).classList.toggle('hidden',!a);});}
+function setCTFeeTab(t){['test','retest','cancel'].forEach(function(x){var a=x===t;document.getElementById('ft-ct-'+x).classList.toggle('active',a);document.getElementById('ft-ct-c-'+x).classList.toggle('hidden',!a);});}
+function setMAFeeTab(t){['tns','rmv','cancel'].forEach(function(x){var a=x===t;document.getElementById('ft-ma-'+x).classList.toggle('active',a);document.getElementById('ft-ma-c-'+x).classList.toggle('hidden',!a);});}
+function setMATestType(t){maTestTy=t;document.getElementById('btn-tns-test').className='seg-btn'+(t==='tns'?' ab':'');document.getElementById('btn-rmv-test').className='seg-btn'+(t==='rmv'?' ab':'');document.getElementById('ma-tns-note').style.display=t==='tns'?'block':'none';calcMADeadline();}
+function dlRow(label,date,ok,dtd){var bg=ok?'#F4FBF0':(dtd<=2?'#FFF8EC':'#FFF5F5'),bc=ok?'#73BF45':(dtd<=2?'#F58A21':'#E24B4A'),st=ok?'Passed':(dtd<=0?'Today':dtd+'d left');return '<div style="padding:10px 12px;border-left:4px solid '+bc+';background:'+bg+';border-radius:0 8px 8px 0;margin-bottom:6px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><div><div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;">'+label+'</div><div style="font-size:13px;font-weight:700;color:#3B3B3B;">'+fmtShort(date)+'</div></div><div style="font-size:11px;font-weight:700;color:'+bc+';border:1px solid '+bc+';border-radius:6px;padding:3px 8px;white-space:nowrap;">'+st+'</div></div></div>';}
+function calcCTDeadline(){var v=document.getElementById('ct-test-date').value,el=document.getElementById('ct-deadline-res');if(!v){el.innerHTML='';return;}var td=new Date(v+'T00:00:00'),today=new Date();today.setHours(0,0,0,0);if(td<today){el.innerHTML='<div style="font-size:13px;color:#aaa;padding:6px 0;">Test date is in the past.</div>';return;}var dl=subD(td,5),dtd=daysUntil(dl);el.innerHTML=dlRow('Cancellation Deadline',dl,dl<=today,dtd)+dlRow('Minimum 2-Hour Lesson Deadline',dl,dl<=today,dtd);}
+function calcCTRetest(){var v=document.getElementById('ct-fail-date').value,el=document.getElementById('ct-retest-res');if(!v){el.innerHTML='';return;}var r=addD(new Date(v+'T00:00:00'),14),today=new Date();today.setHours(0,0,0,0);el.innerHTML=dlRow('Earliest Retest Date',r,r<=today,daysUntil(r));}
+function calcMADeadline(){var v=document.getElementById('ma-test-date').value,el=document.getElementById('ma-deadline-res');if(!v){el.innerHTML='';return;}var td=new Date(v+'T00:00:00'),today=new Date();today.setHours(0,0,0,0);if(td<today){el.innerHTML='<div style="font-size:13px;color:#aaa;padding:6px 0;">Test date is in the past.</div>';return;}var dl,label;if(maTestTy==='tns'){var r=new Date(td),day=r.getDay(),diff=day===2?7:(day+5)%7;r.setDate(r.getDate()-diff);dl=r;label='Cancellation Deadline (Tuesday)';}else{dl=subD(td,5);label='Cancellation Deadline (5 Days Prior)';}el.innerHTML=dlRow(label,dl,dl<=today,daysUntil(dl));}
+function calcMARetest(){var v=document.getElementById('ma-fail-date').value,el=document.getElementById('ma-retest-res');if(!v){el.innerHTML='';return;}var r=addD(new Date(v+'T00:00:00'),14),today=new Date();today.setHours(0,0,0,0);el.innerHTML=dlRow('Earliest Retest Date',r,r<=today,daysUntil(r));}
+// REFUND CALC
+var refundProd='alacarte',refundPmt='card';
+function setRefundProd(p){refundProd=p;document.getElementById('rbtn-alacarte').className='refund-seg-btn'+(p==='alacarte'?' on':'');document.getElementById('rbtn-bundle').className='refund-seg-btn'+(p==='bundle'?' on':'');var isBundle=p==='bundle';document.getElementById('bundle-msg').classList.toggle('hidden',!isBundle);document.getElementById('refund-fields').style.opacity=isBundle?'0.4':'1';document.getElementById('refund-fields').style.pointerEvents=isBundle?'none':'auto';clearRefundResult();if(isBundle)showBundleResult();}
+function setRefundPmt(p){refundPmt=p;['card','check','cash'].forEach(function(x){document.getElementById('pmt-'+x).className='pmt-btn'+(x===p?' on':'');});clearRefundResult();}
+function clearRefundResult(){document.getElementById('refund-result').innerHTML='';}
+function showBundleResult(){document.getElementById('refund-result').innerHTML='<div class="res-card ineligible"><div class="res-badge r">✗ Not Eligible</div><div class="res-heading">No Refund Available</div><div class="res-sub" style="color:#A32D2D;">Bundles Are Non-Refundable</div><div style="font-size:12px;color:#555;padding-top:10px;border-top:1px solid rgba(0,0,0,.08);">Per TNS Terms &amp; Conditions, all bundle purchases (Full Driver Education Bundle, 8 &amp; 8 Bundle, Easy as 1,2,3 Bundle) are non-refundable and non-transferable regardless of purchase date.</div></div>';}
+function calcRefund(){if(refundProd==='bundle'){showBundleResult();return;}var dateVal=document.getElementById('r-date').value,amtVal=document.getElementById('r-amount').value,el=document.getElementById('refund-result');if(!dateVal){el.innerHTML='<div class="co co-r" style="margin-top:1rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="12" cy="12" r="10" stroke="#E24B4A" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#A32D2D;">Please enter the original purchase date.</span></div>';return;}if(!amtVal||parseFloat(amtVal)<=0){el.innerHTML='<div class="co co-r" style="margin-top:1rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="12" cy="12" r="10" stroke="#E24B4A" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#A32D2D;">Please enter the original purchase amount.</span></div>';return;}var pd=new Date(dateVal+'T00:00:00'),today=new Date();today.setHours(0,0,0,0);var days=Math.floor((today-pd)/(1000*60*60*24)),amt=parseFloat(amtVal),refAmt=amt*0.90,fee=amt*0.10,WINDOW=180,eligible=days>=0&&days<=WINDOW,method,mReason;if(refundPmt==='card'&&days<=WINDOW){method='card';mReason='Paid by credit card within 180 days — refund via Authorize.net back to original card. Allow 3–5 business days.';}else if(refundPmt==='card'&&days>WINDOW){method='check';mReason='Paid by credit card but past the 180-day Authorize.net window — issue a check instead.';}else{method='check';mReason='Paid by '+(refundPmt==='check'?'check':'cash')+' — issue a check refund.';}var html='';if(!eligible){var reason=days<0?'Purchase date is in the future — please check the date entered.':'Purchase was made <strong>'+days+' days ago</strong>, which is past the 6-month (180-day) refund window.';html='<div class="res-card ineligible"><div class="res-badge r">✗ Not Eligible</div><div class="res-heading">No Refund Available</div><div class="res-sub" style="color:#A32D2D;">Outside The 6-Month Refund Window</div><div style="font-size:12px;color:#555;padding-top:10px;border-top:1px solid rgba(0,0,0,.08);">'+reason+' TNS policy only allows refunds on à la carte purchases within 6 months (180 days) of the original purchase date.</div></div>';}else{var daysLeft=WINDOW-days,urgency='';if(daysLeft<=14)urgency='<div class="co co-o" style="margin-top:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#F58A21" stroke-width="2"/></svg><strong style="color:#C46D10;">Refund window closes in '+daysLeft+' day'+(daysLeft!==1?'s':'')+'</strong><span style="color:#C46D10;"> — process promptly.</span></div>';var mHtml=method==='card'?'<div class="method-box card-method"><div class="method-icon" style="background:#29A3BD;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="white" stroke-width="2"/><path d="M2 10h20" stroke="white" stroke-width="2"/><path d="M6 15h4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="method-title">Refund To Card Via Authorize.net</div><div class="method-sub">'+mReason+'</div></div></div>':'<div class="method-box check-method"><div class="method-icon" style="background:#F58A21;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="13" rx="2" stroke="white" stroke-width="2"/><path d="M2 11h20M6 15h5M14 15h4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="method-title">Issue A Check</div><div class="method-sub">'+mReason+'</div></div></div>';html='<div class="res-card eligible"><div class="res-badge g">✓ Eligible For Refund</div><div class="res-heading">$'+refAmt.toFixed(2)+'</div><div class="res-sub" style="color:#3B6D11;">Refund Amount After 10% Processing Fee</div><div style="padding:10px 0;"><div class="det-row"><span class="det-k">Original amount</span><span class="det-v">$'+amt.toFixed(2)+'</span></div><div class="det-row"><span class="det-k">Processing fee (10%)</span><span class="det-v" style="color:#E24B4A;">− $'+fee.toFixed(2)+'</span></div><div class="det-row"><span class="det-k">Refund amount</span><span class="det-v" style="color:#3B6D11;">$'+refAmt.toFixed(2)+'</span></div><div class="det-row"><span class="det-k">Days since purchase</span><span class="det-v">'+days+' days</span></div><div class="det-row"><span class="det-k">Window closes in</span><span class="det-v">'+daysLeft+' day'+(daysLeft!==1?'s':'')+'</span></div></div>'+mHtml+urgency+'</div>';}el.innerHTML=html;}
+// SEARCH
+// FAQ DATA & LOGIC
+var ICO_O='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg>';
+var ICO_R='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#E24B4A" stroke-width="2"/></svg>';
+var ICO_B='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg>';
+var FAQS=[
+  {cat:'Account & Enrollment',state:'both',q:'How long do students have to complete their program?',a:'<p>Students have <strong>24 months from the date of enrollment</strong> to complete their program. Any unused services at that point are forfeited.</p><p>If a student has completed all their classes and driving lessons but still needs to finish quizzes or obtain required signatures for their certificate, we may reopen the account for that purpose.</p><p>Additional services purchased separately — such as a license test — also carry a <strong>24-month window from their individual purchase date</strong>.</p>'},
+  {cat:'Account & Enrollment',state:'both',q:'Can students freeze their account?',a:'<p>Yes. Students can request <strong>one account freeze</strong> valid for up to <strong>6 months</strong> if they are unable to complete their program within the 24-month window.</p><div class="co co-o">'+ICO_O+'<span style="color:#C46D10;">The freeze must be requested <strong>before</strong> the account expires — it cannot be applied retroactively.</span></div>'},
+  {cat:'Discounts',state:'both',q:'What discounts does TNS offer?',a:'<p>TNS currently offers two discounts:</p><ul><li><strong>Hero Discount</strong> — Available to first responders (police, fire, EMS, military). <strong>$10 off</strong> the 8-Hour Safe Driving Course or <strong>$25 off</strong> the Full Driver Education Program.</li><li><strong>Sibling Discount</strong> — Families enrolling more than one child receive <strong>$10 off per sibling</strong>.</li></ul>'},
+  {cat:'CT Permit & License',state:'ct',q:'What is the CT Work Zone Safety Course and when is it required?',a:'<p>The <strong>Connecticut Work Zone Safety Course</strong> is a mandatory online course that all new CT drivers must complete <strong>before</strong> applying for a learner\'s permit — it is the very first step in the CT licensing process.</p><ul><li>Covers safe driving through highway work zones</li><li>Required by CT state law</li><li>Available online, free of charge</li><li>Proof of completion is required at the DMV permit appointment</li></ul>'},
+  {cat:'CT Permit & License',state:'ct',q:'How does a new driver get a learner\'s permit in CT?',a:'<p>The first step is completing the <strong>CT Work Zone Safety Course</strong> online. Then the driver applies at the DMV by passing a <strong>written knowledge test</strong> (based on the CT Driver\'s Manual) and a <strong>vision test</strong>.</p><ul><li>Residents <strong>age 16+</strong> can apply for a standard learner\'s permit</li><li>Residents <strong>age 18+</strong> can apply for an adult learner\'s permit</li></ul><p>Once issued, students can begin practicing with a qualified trainer.</p><div class="co co-o">'+ICO_O+'<span style="color:#C46D10;">If a license has been <strong>expired for 2 or more years</strong>, all testing requirements must be completed again from scratch — including a new permit and road test.</span></div>'},
+  {cat:'CT Permit & License',state:'ct',q:'Can someone transfer an out-of-state license to CT?',a:'<p>It depends on where it was issued and whether it has expired:</p><ul><li><strong>Valid or expired less than 2 years</strong> — Transfers allowed from other U.S. states/territories, Germany, Canada, or France. No driver\'s education generally required.</li><li><strong>Expired more than 2 years</strong> — Cannot be transferred. Must restart the full process: permit → 8-hour course → tests.</li></ul><div class="co co-r">'+ICO_R+'<span style="color:#A32D2D;"><strong>Out-of-state learner\'s permits cannot be transferred in CT.</strong> The student must apply for a CT permit and retake the knowledge test.</span></div>'},
+  {cat:'CT Permit & License',state:'ct',q:'Can someone with a foreign license drive in CT?',a:'<p>Yes, with the right documentation. A valid <strong>foreign driver\'s license plus an IDP</strong> allows driving in CT for up to <strong>1 year</strong>, or until CT residency is established.</p><ul><li><strong>Approved countries</strong> (Germany, Canada, France) → License transfer allowed without retesting</li><li><strong>All other countries</strong> → Must obtain CT permit, complete 8-hour course, and pass all required tests</li></ul>'},
+  {cat:'CT Permit & License',state:'ct',q:'What is the Drive-Only License in CT?',a:'<p>The CT Drive-Only License is available to individuals who cannot provide proof of legal presence in the U.S.</p><ul><li>It is <strong>not a REAL ID</strong> — cannot be used for federal identification</li><li>It <strong>cannot be transferred</strong> from any other state</li><li>Full process required: permit → 8-hour course → road test</li></ul>'},
+  {cat:'CT Permit & License',state:'ct',q:'Can students use a Temporary Permit or Temporary License for TNS?',a:'<p>No — TNS does not accept either document.</p><ul><li><strong>Temporary Permit</strong> — Issued after passing the CT knowledge test while the plastic permit card is mailed. Has no photo ID, so <strong>TNS does not accept it</strong> for driving lessons.</li><li><strong>Temporary License</strong> — Issued after passing the CT road test while the plastic license card is mailed. <strong>TNS does not accept it</strong> either.</li></ul><div class="co co-r">'+ICO_R+'<span style="color:#A32D2D;">Students must wait until their physical permit or license card arrives before booking or attending any TNS lesson or test.</span></div>'},
+  {cat:'MA Permit & License',state:'ma',q:'How does a new driver get a learner\'s permit in MA?',a:'<p>Students must:</p><ul><li>Be at least <strong>16 years old</strong> and a MA resident (parental consent required if under 18)</li><li><strong>Start the application online</strong> at myRMV (mass.gov), then visit an RMV Service Center or AAA to verify documents</li><li>Pass a <strong>vision screening</strong> and pay the <strong>$30 fee</strong></li><li>Pass the <strong>25-question knowledge exam</strong> — 18 correct to pass — online or at the Service Center</li></ul><p>Permit is valid for <strong>2 years</strong>. If expired, must reapply and retake the exam.</p><div class="co co-b">'+ICO_B+'<span style="color:#1A7A96;">Students may begin classroom driver\'s ed at <strong>15 years and 9 months</strong> but cannot begin driving until age 16 with a valid permit.</span></div>'},
+  {cat:'MA Permit & License',state:'ma',q:'Can someone transfer an out-of-state license to MA?',a:'<p>Yes, depending on where it was issued and its expiry status:</p><ul><li><strong>Valid or expired less than 1 year</strong> from a U.S. state, D.C., Mexico, Canada, South Korea, Germany, France, or Taiwan → Transfer allowed, no written or road test required</li><li><strong>Expired more than 1 year</strong> → Must pass written test, road test, and vision exam</li></ul><div class="co co-b">'+ICO_B+'<span style="color:#1A7A96;">Under 18? Must also provide or complete an approved MA driver\'s education certificate even when transferring a license.</span></div>'},
+  {cat:'MA Permit & License',state:'ma',q:'Can someone transfer an out-of-state learner\'s permit to MA?',a:'<p>Yes — unlike CT, Massachusetts <strong>does allow out-of-state permit transfers</strong> under certain conditions:</p><ul><li>The permit must have been issued <strong>less than 2 years ago</strong></li><li>Must be from another U.S. state, D.C., Canada, Mexico, Puerto Rico, or a U.S. Territory</li><li>A <strong>certified driving record</strong> (no more than 30 days old) from the issuing state is required</li></ul><p>Permits from foreign countries <strong>cannot</strong> be transferred to MA.</p>'},
+  {cat:'MA Permit & License',state:'ma',q:'Can someone with a foreign license drive in MA?',a:'<p>Yes. As of July 2018, licensed drivers from <strong>any foreign country</strong> may drive in MA for up to <strong>12 months</strong>, as long as their license is valid and not suspended or revoked.</p><p>If the license is not in English, the driver must carry one of: an IDP, an official English translation from the government/embassy, or a completed RMV translation form.</p><p>To obtain a MA license:</p><ul><li><strong>Mexico, Canada, South Korea, Germany, France, Taiwan</strong> → Transfer allowed without retesting</li><li><strong>All other countries</strong> → Must obtain MA permit and pass written and road tests</li></ul><div class="co co-b">'+ICO_B+'<span style="color:#1A7A96;">An IDP is not legally required in MA if the foreign license is in English, but is strongly recommended otherwise.</span></div>'},
+  {cat:'MA Permit & License',state:'ma',q:'What is the MA Standard Driver\'s License?',a:'<p>The MA Standard Driver\'s License is available to eligible residents regardless of immigration status, under the <strong>Work and Family Mobility Act</strong> (effective July 2023).</p><ul><li>Does <strong>not require immigration documents</strong> to apply</li><li>Is <strong>not a REAL ID</strong> — cannot be used to board domestic flights or enter federal facilities</li><li>Full licensing process applies: permit → course (if required) → road test</li></ul><div class="co co-b">'+ICO_B+'<span style="color:#1A7A96;">This is MA\'s equivalent of CT\'s Drive-Only License — both are for residents who cannot provide proof of legal presence.</span></div>'},
+  {cat:'MA Permit & License',state:'ma',q:'Can students use a Temporary Permit or Temporary License for TNS in MA?',a:'<p>No. TNS does not accept temporary permits or temporary licenses in Massachusetts.</p><div class="co co-r">'+ICO_R+'<span style="color:#A32D2D;">Students must wait for their physical permit or license card before booking or attending any TNS lesson or test.</span></div>'},
+];
+function faqStateTag(s){if(s==='ct')return'<span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:#FEF3E4;color:#C46D10;margin-bottom:8px;">CT</span>';if(s==='ma')return'<span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:#E0F4FA;color:#1A7A96;margin-bottom:8px;">MA</span>';return'<span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:#F0F0F0;color:#555;margin-bottom:8px;">CT &amp; MA</span>';}
+function faqBorder(s){if(s==='ct')return'border-left:3px solid #F58A21;';if(s==='ma')return'border-left:3px solid #29A3BD;';return'border-left:3px solid #3B3B3B;';}
+function toggleFaq(id){var a=document.getElementById('fa-'+id),c=document.getElementById('fc-'+id),isOpen=a.style.display==='block';document.querySelectorAll('[id^="fa-"]').forEach(function(x){x.style.display='none';});document.querySelectorAll('[id^="fc-"]').forEach(function(x){x.style.transform='';});if(!isOpen){a.style.display='block';c.style.transform='rotate(180deg)';}}
+function renderFaqs(items){var list=document.getElementById('faq-list'),empty=document.getElementById('faq-empty');if(!items.length){list.innerHTML='';empty.style.display='block';return;}empty.style.display='none';var cats={};items.forEach(function(f,i){if(!cats[f.cat])cats[f.cat]=[];cats[f.cat].push({f:f,i:i});});var html='';Object.keys(cats).forEach(function(cat){html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;margin-top:4px;"><span style="font-size:10px;font-weight:700;color:#888;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">'+cat+'</span><div style="flex:1;height:1px;background:#ddd;"></div></div>';cats[cat].forEach(function(obj){var f=obj.f,i=obj.i;html+='<div style="background:#fff;'+faqBorder(f.state)+'border-radius:10px;margin-bottom:8px;overflow:hidden;border:0.5px solid #eee;"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:13px 14px;cursor:pointer;font-size:13px;font-weight:600;color:#3B3B3B;line-height:1.4;" onclick="toggleFaq('+i+')"><span>'+f.q+'</span><span id="fc-'+i+'" style="font-size:16px;color:#aaa;flex-shrink:0;margin-top:1px;transition:transform .2s;">▾</span></div><div id="fa-'+i+'" style="display:none;padding:0 14px 13px;font-size:13px;color:#555;line-height:1.7;border-top:1px solid #f5f5f5;">'+faqStateTag(f.state)+f.a+'</div></div>';});});list.innerHTML=html;}
+function doFaqSearch(q){var clr=document.getElementById('faq-clr');if(clr)clr.classList.toggle('vis',q.length>0);if(!q.trim()){renderFaqs(FAQS);return;}var lq=q.toLowerCase();renderFaqs(FAQS.filter(function(f){return f.q.toLowerCase().includes(lq)||f.a.replace(/<[^>]+>/g,'').toLowerCase().includes(lq)||f.cat.toLowerCase().includes(lq);}));}
+document.addEventListener('DOMContentLoaded',function(){var fi=document.getElementById('faq-s'),fc=document.getElementById('faq-clr');if(fi)fi.addEventListener('input',function(){doFaqSearch(this.value);});if(fc)fc.addEventListener('click',function(){fi.value='';doFaqSearch('');fi.focus();});});
+// Initialize FAQ when screen is shown — patch goTo
+var _origGoTo=goTo;goTo=function(s){_origGoTo(s);if(s==='faq'){renderFaqs(FAQS);}};
+
+var IDX=[{l:'CT Permit Guide',s:'Requirements & Fees',cls:'',sc:'ct-permit',kw:'ct connecticut permit learner r-229 form 2-d knowledge test vision dmv 16 17 teen adult qualified trainer $40 $19 appointment bridgeport cheshire danbury enfield hamden norwalk waterbury wethersfield willimantic work zone safety course workzone'},{l:'CT License Guide',s:'Training & Road Test',cls:'',sc:'ct-license',kw:'ct connecticut license road test 120 day 180 day edec curfew restrictions full course 8 hour safe driving 90 day adult 48 hours r-229 passengers family'},{l:'CT Services',s:'Programs & Pricing',cls:'',sc:'ct-services',kw:'ct connecticut services price pricing bundle lesson classroom 30 hour 8 hour mock test retest $150 $200 $330 $149 $799 $479 $350 $190 $800 $400 $600 $1000 cancellation no-show forfeit upgrade'},{l:'CT Locations',s:'57 Locations & Zip Search',cls:'',sc:'ct-locations',kw:'ct connecticut location avon bloomfield bristol brookfield cheshire danbury east berlin east haven enfield fairfield farmington glastonbury granby greenwich guilford hamden hartford holy cross housatonic lakeview madison manchester mansfield middletown milford monroe naugatuck new britain new london new milford newington newtown niantic norwalk norwich old saybrook orange redding rocky hill seymour shelton simsbury southbury southington stamford stratford terryville torrington vernon wallingford waterbury waterford watertown west hartford westport willimantic windsor wolcott zip near me license test'},{l:'MA Permit Guide',s:'Requirements & Fees',cls:'r-ma',sc:'ma-permit',kw:'ma massachusetts permit learner rmv myrmv knowledge test online exam 16 teen adult curfew supervising driver $30 vision 25 questions 18 correct 2 years aaa service center'},{l:'MA License Guide',s:'JOL & Road Test',cls:'r-ma',sc:'ma-license',kw:'ma massachusetts license jol junior operator road test 6 months 184 days drivers ed 30 hour 12 hour observation btw restrictions curfew 16.5 18 adult signed permit 40 hours supervised 2 hour lesson'},{l:'MA Services',s:'Programs & Pricing',cls:'r-ma',sc:'ma-services',kw:'ma massachusetts services price pricing bundle lesson classroom $925 $200 $700 $119 $150 $319 mock test saturday monday rmv cancellation tuesday $80 $330 12 hour observation recommended'},{l:'MA Locations',s:'14 Locations & Zip Search',cls:'r-ma',sc:'ma-locations',kw:'ma massachusetts location northampton worcester west springfield holyoke amherst greenfield leominster marlborough natick chicopee framingham longmeadow shrewsbury southbridge zip near me pickup drop-off full service'},{l:'Eligibility Calculator',s:'CT & MA Eligibility Dates',cls:'r-dark',sc:'eligibility',kw:'eligibility calculator date dob birthday permit hold 120 180 90 184 retest deadline cancellation 14 days tuesday 5 days pass fail age when can test'},{l:'Terms & Conditions',s:'CT & MA Policies',cls:'r-dark',sc:'terms',kw:'terms conditions refund cancel cancellation zoom edec age enrollment late no-show $100 $190 tardy medical weather bundle 24 months account gift certificate 70 percent 80 percent quiz final exam session 1 parent cs-1 $25 camera legal name closed toe shoes glasses permit 6 months 10 percent fee observer orthopedic recording late pickup authorities'},{l:'Refund Eligibility',s:'Calculate Refund & Method',cls:'r-dark',sc:'refund',kw:'refund eligible eligibility bundle alacarte a la carte purchase date 6 months 180 days 10 percent processing fee authorize.net credit card check cash 90 percent amount'},{l:'FAQ',s:'Common Questions & Answers',cls:'r-dark',sc:'faq',kw:'faq frequently asked questions account freeze 24 months discount hero sibling work zone safety course temporary permit license transfer foreign international idp drive-only standard license out of state ct ma'},{l:'Agent Training',s:'Call Scripts & Support Guidelines',cls:'r-dark',sc:'training',kw:'agent training call script asd autism spectrum escalation language we us our customer service late arrival early departure partial fee forfeit make up key pointers efficiency empathy manager escalate'}];
+var sinp=document.getElementById('s-in'),sclr=document.getElementById('s-clr'),sres=document.getElementById('s-res'),shome=document.getElementById('home-content');
+function doSearch(q){q=q.trim().toLowerCase();sclr.classList.toggle('vis',q.length>0);if(!q){sres.style.display='none';shome.style.display='block';sres.innerHTML='';return;}shome.style.display='none';sres.style.display='block';var hits=IDX.filter(function(i){return i.l.toLowerCase().includes(q)||i.s.toLowerCase().includes(q)||i.kw.includes(q);});if(!hits.length){sres.innerHTML='<div class="no-results">No results for "'+q+'"</div>';return;}sres.innerHTML=hits.map(function(h){return '<div class="r-item '+h.cls+'" onclick="goTo(\''+h.sc+'\')" style="width:100%;"><div style="flex:1;"><div class="r-label">'+h.l+'</div><div class="r-sub">'+h.s+'</div></div><span style="color:#bbb;font-size:16px;">›</span></div>';}).join('');}
+sinp.addEventListener('input',function(){doSearch(this.value);});
+sclr.addEventListener('click',function(){sinp.value='';doSearch('');sinp.focus();});
+sinp.addEventListener('keydown',function(e){if(e.key==='Escape'){sinp.value='';doSearch('');}});
+</script>
+</body>
+</html>
