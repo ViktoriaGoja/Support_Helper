@@ -136,20 +136,6 @@ input[type=number]:focus{border-color:#F58A21;}
 .method-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .method-title{font-size:13px;font-weight:700;color:#3B3B3B;margin-bottom:2px;}.method-sub{font-size:12px;color:#555;line-height:1.4;}
 .field-wrap{margin-bottom:1.1rem;}
-.form-section{padding:1rem;}
-.form-group{margin-bottom:14px;}
-.form-label{font-size:11px;font-weight:700;color:#3B3B3B;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px;display:block;font-family:'DM Sans',sans-serif;}
-.form-input,.form-select,.form-textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;font-family:'DM Sans',sans-serif;color:#3B3B3B;outline:none;background:#fff;box-sizing:border-box;}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#F58A21;box-shadow:0 0 0 3px rgba(245,138,33,.12);}
-.form-textarea{min-height:100px;resize:vertical;}
-.form-row{display:flex;gap:10px;}.form-row .form-group{flex:1;}
-.form-submit{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:8px;transition:opacity .15s;}
-.form-submit:active{opacity:.85;}
-.btn-orange{background:#F58A21;color:#fff;}.btn-blue{background:#29A3BD;color:#fff;}.btn-red{background:#E24B4A;color:#fff;}
-.form-success{background:#F4FBF0;border:2px solid #73BF45;border-radius:10px;padding:16px;text-align:center;margin-top:12px;}
-.form-success-icon{font-size:28px;color:#73BF45;margin-bottom:6px;}
-.form-success-text{font-size:14px;font-weight:700;color:#3B6D11;}
-.form-success-sub{font-size:12px;color:#555;margin-top:4px;}
 </style>
 </head>
 <body>
@@ -206,13 +192,6 @@ input[type=number]:focus{border-color:#F58A21;}
       <button class="gen-card" onclick="goTo('refund')"><div class="nc-icon" style="background:#F5F4F0;border:1px solid #eee;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#3B3B3B" stroke-width="2"/><path d="M12 6v1m0 10v1M9 9.5A2.5 2.5 0 0112 7h.5a2.5 2.5 0 010 5h-1a2.5 2.5 0 000 5H12a2.5 2.5 0 002.5-2.5" stroke="#3B3B3B" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><div class="nc-label">Refund Eligibility</div><div class="nc-sub">Calculate Refund &amp; Method</div></div><span class="nc-arrow">›</span></button>
       <button class="gen-card" onclick="goTo('faq')"><div class="nc-icon" style="background:#F5F4F0;border:1px solid #eee;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#3B3B3B" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">FAQ</div><div class="nc-sub">Common Questions &amp; Answers</div></div><span class="nc-arrow">›</span></button>
       <button class="gen-card" onclick="goTo('training')"><div class="nc-icon" style="background:#F5F4F0;border:1px solid #eee;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12l10 5 10-5" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17l10 5 10-5" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="nc-label">Agent Training</div><div class="nc-sub">Call Scripts &amp; Support Guidelines</div></div><span class="nc-arrow">›</span></button>
-      <button class="gen-card" onclick="goTo('employee-list')"><div class="nc-icon" style="background:#F5F4F0;border:1px solid #eee;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#3B3B3B" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#3B3B3B" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">Active Employee List</div><div class="nc-sub">TNS Staff Directory</div></div><span class="nc-arrow">›</span></button>
-    </div>
-    <div style="margin-top:4px;">
-      <div class="gen-label"><div class="gen-dot" style="background:#F58A21;"></div><span class="gen-lbl">Forms &amp; Lists</span></div>
-      <button class="gen-card" style="border-left-color:#F58A21;" onclick="goTo('form-refund')"><div class="nc-icon" style="background:#FEF3E4;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 6v1m0 10v1M9 9.5A2.5 2.5 0 0112 7h.5a2.5 2.5 0 010 5h-1a2.5 2.5 0 000 5H12a2.5 2.5 0 002.5-2.5" stroke="#F58A21" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><div class="nc-label">Refund Request</div><div class="nc-sub">Submit Refund to Microsoft Lists</div></div><span class="nc-arrow">›</span></button>
-      <button class="gen-card" style="border-left-color:#29A3BD;" onclick="goTo('form-lead')"><div class="nc-icon" style="background:#E0F4FA;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#29A3BD" stroke-width="2"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">New Lead</div><div class="nc-sub">Add Lead to Microsoft Lists</div></div><span class="nc-arrow">›</span></button>
-      <button class="gen-card" style="border-left-color:#E24B4A;" onclick="goTo('form-escalation')"><div class="nc-icon" style="background:#FFF5F5;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#E24B4A" stroke-width="2"/><path d="M12 9v4m0 4h.01" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="nc-label">Escalation Form</div><div class="nc-sub">Submit Escalation to Microsoft Lists</div></div><span class="nc-arrow">›</span></button>
     </div>
     <div style="height:20px;"></div>
   </div>
@@ -869,67 +848,6 @@ input[type=number]:focus{border-color:#F58A21;}
   </div>
 </div>
 
-<!-- FORM: REFUND REQUEST -->
-<div id="screen-form-refund" class="screen">
-  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">Refund Request Form</span></div>
-  <div class="form-section">
-    <div class="co co-o" style="margin-bottom:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#F58A21" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#F58A21" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#C46D10;font-size:12px;">Submits directly to <strong>Microsoft Lists</strong>. All fields are required unless marked optional.</span></div>
-    <form id="refund-form" onsubmit="submitForm(event,'refund')">
-      <div class="form-group"><label class="form-label">Student</label><input class="form-input" name="student" required placeholder="Student full name"></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" name="date" required></div><div class="form-group"><label class="form-label">Amount</label><input class="form-input" type="number" step="0.01" name="amount" required placeholder="$0.00"></div></div>
-      <div class="form-group"><label class="form-label">Product</label><input class="form-input" name="product" required placeholder="e.g. BTWs, Test @ TNS, Full Course, Cancellation Fee"></div>
-      <div class="form-group"><label class="form-label">Reason</label><textarea class="form-textarea" name="reason" required placeholder="Reason for refund..."></textarea></div>
-      <button type="submit" class="form-submit btn-orange">Submit Refund Request</button>
-    </form>
-    <div id="refund-form-result"></div>
-  </div>
-</div>
-
-<!-- FORM: NEW LEAD -->
-<div id="screen-form-lead" class="screen">
-  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">New Lead Form</span></div>
-  <div class="form-section">
-    <div class="co co-b" style="margin-bottom:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#29A3BD" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#29A3BD" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#1A7A96;font-size:12px;">Submits directly to <strong>Microsoft Lists</strong>. All fields are required unless marked optional.</span></div>
-    <form id="lead-form" onsubmit="submitForm(event,'lead')">
-      <div class="form-row"><div class="form-group"><label class="form-label">Created By</label><select class="form-select" name="created_by" required id="lead-created-by"><option value="">Select...</option></select></div><div class="form-group"><label class="form-label">Created</label><input class="form-input" type="date" name="created" required id="lead-created-date"></div></div>
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" name="email" required placeholder="Lead email address"></div>
-      <div class="form-group"><label class="form-label">State</label><select class="form-select" name="state" required><option value="">Select...</option><option>CT</option><option>MA</option></select></div>
-      <button type="submit" class="form-submit btn-blue">Submit New Lead</button>
-    </form>
-    <div id="lead-form-result"></div>
-  </div>
-</div>
-
-<!-- FORM: ESCALATION -->
-<div id="screen-form-escalation" class="screen">
-  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">Escalation Form</span></div>
-  <div class="form-section">
-    <div class="co co-r" style="margin-bottom:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#E24B4A" stroke-width="2"/></svg><span style="color:#A32D2D;font-size:12px;">Submits directly to <strong>Microsoft Lists</strong>. All fields are required unless marked optional.</span></div>
-    <form id="escalation-form" onsubmit="submitForm(event,'escalation')">
-      <div class="form-group"><label class="form-label">Student Name *</label><input class="form-input" name="student_name" required placeholder="Enter value here"></div>
-      <div class="form-group"><label class="form-label">Parent Name</label><input class="form-input" name="parent_name" placeholder="Enter value here"><div style="font-size:11px;color:#888;margin-top:4px;">Name of person to contact regarding complaint.</div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" type="tel" name="phone_number" placeholder="Enter a number"></div><div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" name="email" placeholder="Enter value here"></div></div>
-      <div class="form-group"><label class="form-label">Complaint Type *</label><select class="form-select" name="complaint_type" required><option value="">Select...</option><option>Staff Member Complaint</option><option>Classroom Attendance</option><option>Lesson Availability</option><option>Lesson Cancellation</option><option>Call Center Wait Time</option><option>Failed Road Test</option><option>Communication Error</option><option>No Show Complaint</option><option>Pricing Complaint</option><option>Scheduling Error</option><option>Testing Availability</option><option>Testing Issue</option><option>eDEC Complaint</option><option>Classroom Link Issue</option></select><div style="font-size:11px;color:#888;margin-top:4px;">What is this complaint about?</div></div>
-      <div class="form-group"><label class="form-label">TNS Staff Member Involved</label><select class="form-select" name="staff_involved" id="esc-staff-involved"><option value="">Select staff member...</option></select><div style="font-size:11px;color:#888;margin-top:4px;">Select if this complaint is about an Instructor, Licensing Guide, or other TNS staff member.</div></div>
-      <div class="form-group"><label class="form-label">Complaint Details *</label><textarea class="form-textarea" name="complaint_details" required placeholder="Enter value here"></textarea><div style="font-size:11px;color:#888;margin-top:4px;">Please detail the complaint as it was described to you. Be explicit in the details, quoting exactly what the customer stated.</div></div>
-      <div class="form-group"><label class="form-label">Steps You Took to Avoid Escalation</label><textarea class="form-textarea" name="steps_to_avoid" placeholder="Enter value here"></textarea></div>
-      <div class="form-group"><label class="form-label">Regional Manager</label><select class="form-select" name="regional_manager" id="esc-regional-mgr"><option value="">Select...</option></select></div>
-      <div class="form-group"><label class="form-label">Your Squad Leader</label><select class="form-select" name="squad_leader" id="esc-squad-leader"><option value="">Select...</option></select><div style="font-size:11px;color:#888;margin-top:4px;">Select your Squad Leader.</div></div>
-      <div class="form-group"><label class="form-label">Complaint Source *</label><select class="form-select" name="complaint_source" required><option value="">Select...</option><option>External - Customer</option><option>Internal</option></select></div>
-      <button type="submit" class="form-submit btn-red">Submit Escalation</button>
-    </form>
-    <div id="escalation-form-result"></div>
-  </div>
-</div>
-
-<!-- ACTIVE EMPLOYEE LIST -->
-<div id="screen-employee-list" class="screen">
-  <div class="sec-hdr"><button class="back-btn" onclick="goHome()">‹ Home</button><span class="sec-title" style="margin-left:8px;">Active Employee List</span></div>
-  <div style="padding:14px;">
-    <div class="search-box" style="margin-bottom:12px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="11" cy="11" r="8" stroke="#bbb" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#bbb" stroke-width="2" stroke-linecap="round"/></svg><input type="text" id="ee-search" placeholder="Search employees…" style="flex:1;border:none;outline:none;font-size:15px;font-family:'DM Sans',sans-serif;color:#3B3B3B;background:transparent;"/></div>
-    <div id="ee-list"></div>
-  </div>
-</div>
 
 </div><!-- end #app -->
 <script>
@@ -1011,135 +929,17 @@ function faqBorder(s){if(s==='ct')return'border-left:3px solid #F58A21;';if(s===
 function toggleFaq(id){var a=document.getElementById('fa-'+id),c=document.getElementById('fc-'+id),isOpen=a.style.display==='block';document.querySelectorAll('[id^="fa-"]').forEach(function(x){x.style.display='none';});document.querySelectorAll('[id^="fc-"]').forEach(function(x){x.style.transform='';});if(!isOpen){a.style.display='block';c.style.transform='rotate(180deg)';}}
 function renderFaqs(items){var list=document.getElementById('faq-list'),empty=document.getElementById('faq-empty');if(!items.length){list.innerHTML='';empty.style.display='block';return;}empty.style.display='none';var cats={};items.forEach(function(f,i){if(!cats[f.cat])cats[f.cat]=[];cats[f.cat].push({f:f,i:i});});var html='';Object.keys(cats).forEach(function(cat){html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;margin-top:4px;"><span style="font-size:10px;font-weight:700;color:#888;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">'+cat+'</span><div style="flex:1;height:1px;background:#ddd;"></div></div>';cats[cat].forEach(function(obj){var f=obj.f,i=obj.i;html+='<div style="background:#fff;'+faqBorder(f.state)+'border-radius:10px;margin-bottom:8px;overflow:hidden;border:0.5px solid #eee;"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:13px 14px;cursor:pointer;font-size:13px;font-weight:600;color:#3B3B3B;line-height:1.4;" onclick="toggleFaq('+i+')"><span>'+f.q+'</span><span id="fc-'+i+'" style="font-size:16px;color:#aaa;flex-shrink:0;margin-top:1px;transition:transform .2s;">▾</span></div><div id="fa-'+i+'" style="display:none;padding:0 14px 13px;font-size:13px;color:#555;line-height:1.7;border-top:1px solid #f5f5f5;">'+faqStateTag(f.state)+f.a+'</div></div>';});});list.innerHTML=html;}
 function doFaqSearch(q){var clr=document.getElementById('faq-clr');if(clr)clr.classList.toggle('vis',q.length>0);if(!q.trim()){renderFaqs(FAQS);return;}var lq=q.toLowerCase();renderFaqs(FAQS.filter(function(f){return f.q.toLowerCase().includes(lq)||f.a.replace(/<[^>]+>/g,'').toLowerCase().includes(lq)||f.cat.toLowerCase().includes(lq);}));}
-document.addEventListener('DOMContentLoaded',function(){var fi=document.getElementById('faq-s'),fc=document.getElementById('faq-clr');if(fi)fi.addEventListener('input',function(){doFaqSearch(this.value);});if(fc)fc.addEventListener('click',function(){fi.value='';doFaqSearch('');fi.focus();});var lcd=document.getElementById('lead-created-date');if(lcd){lcd.value=new Date().toISOString().split('T')[0];}
-var es=document.getElementById('esc-staff-involved');if(es)es.innerHTML=buildSelect(TNS_ALL_STAFF,'Select staff member...');
-var eq=document.getElementById('esc-squad-leader');if(eq)eq.innerHTML=buildSelect(TNS_SQUAD_LEADERS,'Select squad leader...');
-var er=document.getElementById('esc-regional-mgr');if(er)er.innerHTML=buildSelect(TNS_REGIONAL_MANAGERS,'Select regional manager...');
-var lc=document.getElementById('lead-created-by');if(lc)lc.innerHTML=buildSelect(TNS_SUPPORT_TEAM,'Select your name...');
-renderEmployeeList();});
+document.addEventListener('DOMContentLoaded',function(){var fi=document.getElementById('faq-s'),fc=document.getElementById('faq-clr');if(fi)fi.addEventListener('input',function(){doFaqSearch(this.value);});if(fc)fc.addEventListener('click',function(){fi.value='';doFaqSearch('');fi.focus();});});
 // Initialize FAQ when screen is shown — patch goTo
-var _origGoTo=goTo;goTo=function(s){_origGoTo(s);if(s==='faq'){renderFaqs(FAQS);}if(s==='employee-list'){renderEmployeeList();var ees=document.getElementById('ee-search');if(ees){ees.value='';ees.oninput=function(){renderEmployeeList(this.value);};}}};
+var _origGoTo=goTo;goTo=function(s){_origGoTo(s);if(s==='faq'){renderFaqs(FAQS);}};
 
 
-var IDX=[{l:'CT Permit Guide',s:'Requirements & Fees',cls:'',sc:'ct-permit',kw:'ct connecticut permit learner r-229 form 2-d knowledge test vision dmv 16 17 teen adult qualified trainer $40 $19 appointment bridgeport cheshire danbury enfield hamden norwalk waterbury wethersfield willimantic work zone safety course workzone'},{l:'CT License Guide',s:'Training & Road Test',cls:'',sc:'ct-license',kw:'ct connecticut license road test 120 day 180 day edec curfew restrictions full course 8 hour safe driving 90 day adult 48 hours r-229 passengers family'},{l:'CT Services',s:'Programs & Pricing',cls:'',sc:'ct-services',kw:'ct connecticut services price pricing bundle lesson classroom 30 hour 8 hour mock test retest $150 $200 $330 $149 $799 $479 $350 $190 $800 $400 $600 $1000 cancellation no-show forfeit upgrade'},{l:'CT Locations',s:'57 Locations & Zip Search',cls:'',sc:'ct-locations',kw:'ct connecticut location avon bloomfield bristol brookfield cheshire danbury east berlin east haven enfield fairfield farmington glastonbury granby greenwich guilford hamden hartford holy cross housatonic lakeview madison manchester mansfield middletown milford monroe naugatuck new britain new london new milford newington newtown niantic norwalk norwich old saybrook orange redding rocky hill seymour shelton simsbury southbury southington stamford stratford terryville torrington vernon wallingford waterbury waterford watertown west hartford westport willimantic windsor wolcott zip near me license test'},{l:'MA Permit Guide',s:'Requirements & Fees',cls:'r-ma',sc:'ma-permit',kw:'ma massachusetts permit learner rmv myrmv knowledge test online exam 16 teen adult curfew supervising driver $30 vision 25 questions 18 correct 2 years aaa service center'},{l:'MA License Guide',s:'JOL & Road Test',cls:'r-ma',sc:'ma-license',kw:'ma massachusetts license jol junior operator road test 6 months 184 days drivers ed 30 hour 12 hour observation btw restrictions curfew 16.5 18 adult signed permit 40 hours supervised 2 hour lesson'},{l:'MA Services',s:'Programs & Pricing',cls:'r-ma',sc:'ma-services',kw:'ma massachusetts services price pricing bundle lesson classroom $925 $200 $700 $119 $150 $319 mock test saturday monday rmv cancellation tuesday $80 $330 12 hour observation recommended'},{l:'MA Locations',s:'14 Locations & Zip Search',cls:'r-ma',sc:'ma-locations',kw:'ma massachusetts location northampton worcester west springfield holyoke amherst greenfield leominster marlborough natick chicopee framingham longmeadow shrewsbury southbridge zip near me pickup drop-off full service'},{l:'Eligibility Calculator',s:'CT & MA Eligibility Dates',cls:'r-dark',sc:'eligibility',kw:'eligibility calculator date dob birthday permit hold 120 180 90 184 retest deadline cancellation 14 days tuesday 5 days pass fail age when can test'},{l:'Terms & Conditions',s:'CT & MA Policies',cls:'r-dark',sc:'terms',kw:'terms conditions refund cancel cancellation zoom edec age enrollment late no-show $100 $190 tardy medical weather bundle 24 months account gift certificate 70 percent 80 percent quiz final exam session 1 parent cs-1 $25 camera legal name closed toe shoes glasses permit 6 months 10 percent fee observer orthopedic recording late pickup authorities'},{l:'Refund Eligibility',s:'Calculate Refund & Method',cls:'r-dark',sc:'refund',kw:'refund eligible eligibility bundle alacarte a la carte purchase date 6 months 180 days 10 percent processing fee authorize.net credit card check cash 90 percent amount'},{l:'FAQ',s:'Common Questions & Answers',cls:'r-dark',sc:'faq',kw:'faq frequently asked questions account freeze 24 months discount hero sibling work zone safety course temporary permit license transfer foreign international idp drive-only standard license out of state ct ma'},{l:'Agent Training',s:'Call Scripts & Support Guidelines',cls:'r-dark',sc:'training',kw:'agent training call script asd autism spectrum escalation language we us our customer service late arrival early departure partial fee forfeit make up key pointers efficiency empathy manager escalate'},{l:'Refund Request',s:'Submit Refund to Microsoft Lists',cls:'',sc:'form-refund',kw:'refund request form submit lists microsoft refund money payment credit card check'},{l:'New Lead',s:'Add Lead to Microsoft Lists',cls:'r-ma',sc:'form-lead',kw:'new lead form submit lists microsoft phone call walk-in referral prospect customer'},{l:'Escalation Form',s:'Submit Escalation to Microsoft Lists',cls:'r-dark',sc:'form-escalation',kw:'escalation form submit lists microsoft complaint issue urgent priority squad leader manager'},{l:'Active Employee List',s:'TNS Staff Directory',cls:'r-dark',sc:'employee-list',kw:'employee staff directory team roster people squad leader regional manager support instructor active ee list'}];
+var IDX=[{l:'CT Permit Guide',s:'Requirements & Fees',cls:'',sc:'ct-permit',kw:'ct connecticut permit learner r-229 form 2-d knowledge test vision dmv 16 17 teen adult qualified trainer $40 $19 appointment bridgeport cheshire danbury enfield hamden norwalk waterbury wethersfield willimantic work zone safety course workzone'},{l:'CT License Guide',s:'Training & Road Test',cls:'',sc:'ct-license',kw:'ct connecticut license road test 120 day 180 day edec curfew restrictions full course 8 hour safe driving 90 day adult 48 hours r-229 passengers family'},{l:'CT Services',s:'Programs & Pricing',cls:'',sc:'ct-services',kw:'ct connecticut services price pricing bundle lesson classroom 30 hour 8 hour mock test retest $150 $200 $330 $149 $799 $479 $350 $190 $800 $400 $600 $1000 cancellation no-show forfeit upgrade'},{l:'CT Locations',s:'57 Locations & Zip Search',cls:'',sc:'ct-locations',kw:'ct connecticut location avon bloomfield bristol brookfield cheshire danbury east berlin east haven enfield fairfield farmington glastonbury granby greenwich guilford hamden hartford holy cross housatonic lakeview madison manchester mansfield middletown milford monroe naugatuck new britain new london new milford newington newtown niantic norwalk norwich old saybrook orange redding rocky hill seymour shelton simsbury southbury southington stamford stratford terryville torrington vernon wallingford waterbury waterford watertown west hartford westport willimantic windsor wolcott zip near me license test'},{l:'MA Permit Guide',s:'Requirements & Fees',cls:'r-ma',sc:'ma-permit',kw:'ma massachusetts permit learner rmv myrmv knowledge test online exam 16 teen adult curfew supervising driver $30 vision 25 questions 18 correct 2 years aaa service center'},{l:'MA License Guide',s:'JOL & Road Test',cls:'r-ma',sc:'ma-license',kw:'ma massachusetts license jol junior operator road test 6 months 184 days drivers ed 30 hour 12 hour observation btw restrictions curfew 16.5 18 adult signed permit 40 hours supervised 2 hour lesson'},{l:'MA Services',s:'Programs & Pricing',cls:'r-ma',sc:'ma-services',kw:'ma massachusetts services price pricing bundle lesson classroom $925 $200 $700 $119 $150 $319 mock test saturday monday rmv cancellation tuesday $80 $330 12 hour observation recommended'},{l:'MA Locations',s:'14 Locations & Zip Search',cls:'r-ma',sc:'ma-locations',kw:'ma massachusetts location northampton worcester west springfield holyoke amherst greenfield leominster marlborough natick chicopee framingham longmeadow shrewsbury southbridge zip near me pickup drop-off full service'},{l:'Eligibility Calculator',s:'CT & MA Eligibility Dates',cls:'r-dark',sc:'eligibility',kw:'eligibility calculator date dob birthday permit hold 120 180 90 184 retest deadline cancellation 14 days tuesday 5 days pass fail age when can test'},{l:'Terms & Conditions',s:'CT & MA Policies',cls:'r-dark',sc:'terms',kw:'terms conditions refund cancel cancellation zoom edec age enrollment late no-show $100 $190 tardy medical weather bundle 24 months account gift certificate 70 percent 80 percent quiz final exam session 1 parent cs-1 $25 camera legal name closed toe shoes glasses permit 6 months 10 percent fee observer orthopedic recording late pickup authorities'},{l:'Refund Eligibility',s:'Calculate Refund & Method',cls:'r-dark',sc:'refund',kw:'refund eligible eligibility bundle alacarte a la carte purchase date 6 months 180 days 10 percent processing fee authorize.net credit card check cash 90 percent amount'},{l:'FAQ',s:'Common Questions & Answers',cls:'r-dark',sc:'faq',kw:'faq frequently asked questions account freeze 24 months discount hero sibling work zone safety course temporary permit license transfer foreign international idp drive-only standard license out of state ct ma'},{l:'Agent Training',s:'Call Scripts & Support Guidelines',cls:'r-dark',sc:'training',kw:'agent training call script asd autism spectrum escalation language we us our customer service late arrival early departure partial fee forfeit make up key pointers efficiency empathy manager escalate'}];
 var sinp=document.getElementById('s-in'),sclr=document.getElementById('s-clr'),sres=document.getElementById('s-res'),shome=document.getElementById('home-content');
 function doSearch(q){q=q.trim().toLowerCase();sclr.classList.toggle('vis',q.length>0);if(!q){sres.style.display='none';shome.style.display='block';sres.innerHTML='';return;}shome.style.display='none';sres.style.display='block';var hits=IDX.filter(function(i){return i.l.toLowerCase().includes(q)||i.s.toLowerCase().includes(q)||i.kw.includes(q);});if(!hits.length){sres.innerHTML='<div class="no-results">No results for "'+q+'"</div>';return;}sres.innerHTML=hits.map(function(h){return '<div class="r-item '+h.cls+'" onclick="goTo(\''+h.sc+'\')" style="width:100%;"><div style="flex:1;"><div class="r-label">'+h.l+'</div><div class="r-sub">'+h.s+'</div></div><span style="color:#bbb;font-size:16px;">›</span></div>';}).join('');}
 sinp.addEventListener('input',function(){doSearch(this.value);});
 sclr.addEventListener('click',function(){sinp.value='';doSearch('');sinp.focus();});
 sinp.addEventListener('keydown',function(e){if(e.key==='Escape'){sinp.value='';doSearch('');}});
-// EMPLOYEE DIRECTORY (from Active EE List — 128 employees)
-var TNS_ALL_STAFF=[
-'Ajah Stevens','Albert Cirigliano','Alex Rodriguez','Alexandra Donnell','Alicia Polhamus','Allison Rougemont','Alqi Gjoka','Andrew Bahadosingh',
-'Anthony Tortoriello','Ari Yiannoulis','Arianna Flores','Audrey Gay','Bessie Jasinski','Bethany Brague','Bethany DiRocco','Brandon Dufour',
-'Brittney Allen','Bryan Chabla','Caitlyn Cruz','Candice Redman','Caprece Warren','Charles Ricco','Chris Hicks','Christopher Jules',
-'Cole Urso','Colin Elkind','Collier Prouty','Criselda Dean','Crystal Fortier','Crystal Savio','Dale LaVallee','Daniel Peilter',
-'Danielle Smith','David Callegari','David Dymond','David Lombardi','David Yachtis','Donald Borsch','Donald Brown','Douglas Patterson',
-'Edward Green','Erica Chanda','Ernest Reed III','Evan Levene','Franklin Fountain','Garrett Waldron','Gregory Chaisson','Hailey Bradley',
-'Harry Merty','Heather Lamper','Ian Calandro-Bitjeman','Jack Carrabine-Kirby','James Arrico','James Bickford','Jane Gillis','Jascian Glass',
-'Jasmyn Baisden','Jason De La Cruz','Jason Summerfield','Jayron Cayo','Jessicca Morgan','Jodi Belmonte','John Bakula','John Eigo',
-'John Leslie','Jose Cereceda','Jose DeGros','Juan Palma-Ocotl','Julia Perugini','Julie Coburn','Katherine Laviano','Katrina Strong',
-'Kelly Ferguson','Kendra Banks','Kerrianne Tellier','Kevin Wilkes','Kim Nolin','Krystle Finke','LeViticus Glover','Lee Solomon',
-'Leigh Buckens','Lindsey Filakovsky','Lisa Farnsworth','Lisa Gilmore','Louise Hughes','Louise Perugini','Marcia Fountain','Mark Edwards',
-'Matthew Johnson','Matthew Larson','Max Merise','Melissa Lopez','Michael Davenport','Michael Davis','Mika Fortier','Mike Santoro',
-'Mitchell Cantor','Naomi Macala','Nathan Taskin','Nichole Snow','Opal Lamb','Oscar Cruz','Patricia Moody','Paul Civitello',
-'Peter Brigham','Rachel Quarello','Raeanne Eichberger','Rita Clavet','Robert Boutilette','Robert Watters','Robert Zaums','Ronald Parrs',
-'Ryah Mabasa-King','Samantha Cleveland','Sandra Moore','Sarah Phelan','Scott Wilson','Sean Lockwood','Stacie Desorbo','Stephen DiRocco',
-'Stephen Ronalter','Susan Steeves','Susannah Yannaccone','Tyler Begin','Tyler Brown','Tyler Stroup','Viktoria Goja','William Mead'
-];
-var TNS_SQUAD_LEADERS=['Bethany Brague','Caitlyn Cruz','Cole Urso','Collier Prouty','Criselda Dean','David Lombardi','Erica Chanda','Katrina Strong','Melissa Lopez','Ronald Parrs','Sarah Phelan','Susannah Yannaccone'];
-var TNS_REGIONAL_MANAGERS=['Anthony Tortoriello','John Eigo','Mike Santoro'];
-var TNS_SUPPORT_TEAM=[
-'Arianna Flores','Audrey Gay','Caitlyn Cruz','Edward Green','Erica Chanda','James Bickford','Jason De La Cruz','Jodi Belmonte',
-'Julia Perugini','Katherine Laviano','Kendra Banks','Krystle Finke','LeViticus Glover','Lisa Farnsworth','Lisa Gilmore','Louise Hughes',
-'Louise Perugini','Melissa Lopez','Naomi Macala','Nichole Snow','Ryah Mabasa-King','Stacie Desorbo','Susannah Yannaccone'
-];
-var TNS_EMPLOYEES=[
-{n:'Ajah Stevens',role:'Driving Instructor',loc:'Fairfield'},{n:'Albert Cirigliano',role:'Testing Host',loc:'HQ'},{n:'Alex Rodriguez',role:'Driving Instructor',loc:'Wallingford'},{n:'Alexandra Donnell',role:'Driving Instructor',loc:'Northampton'},
-{n:'Alicia Polhamus',role:'Driving Instructor',loc:'Old Saybrook'},{n:'Allison Rougemont',role:'Driving Instructor',loc:'Northampton'},{n:'Alqi Gjoka',role:'Driving Instructor',loc:'Worcester'},{n:'Andrew Bahadosingh',role:'Driving Instructor',loc:'Monroe'},
-{n:'Anthony Tortoriello',role:'Regional Manager',loc:'Central/Western MA'},{n:'Ari Yiannoulis',role:'Driving Instructor',loc:'Fairfield'},{n:'Arianna Flores',role:'Licensing Guide',loc:'HQ'},{n:'Audrey Gay',role:'Completion Coordinator',loc:'HQ'},
-{n:'Bessie Jasinski',role:'Driving Instructor',loc:'Wallingford'},{n:'Bethany Brague',role:'Instructor Squad Leader',loc:'Torrington'},{n:'Bethany DiRocco',role:'Driving Instructor',loc:'Northampton'},{n:'Brandon Dufour',role:'CEO',loc:'HQ'},
-{n:'Brittney Allen',role:'Driving Instructor',loc:'Farmington'},{n:'Bryan Chabla',role:'Driving Instructor',loc:'Middlebury'},{n:'Caitlyn Cruz',role:'Instructor Squad Leader',loc:'Worcester'},{n:'Candice Redman',role:'Driving Instructor',loc:'Middlebury'},
-{n:'Caprece Warren',role:'Driving Instructor',loc:'Northampton'},{n:'Charles Ricco',role:'Driving Instructor',loc:'Old Saybrook'},{n:'Chris Hicks',role:'Driving Instructor',loc:'Willimantic'},{n:'Christopher Jules',role:'Driving Instructor',loc:'Fairfield'},
-{n:'Cole Urso',role:'Instructor Squad Leader',loc:'Wallingford'},{n:'Colin Elkind',role:'Driving Instructor',loc:'Monroe'},{n:'Collier Prouty',role:'Instructor Squad Leader',loc:'Northampton'},{n:'Criselda Dean',role:'Instructor Squad Leader',loc:'Middlebury'},
-{n:'Crystal Fortier',role:'Classroom Instructor',loc:'Middlebury'},{n:'Crystal Savio',role:'Classroom Instructor',loc:'Middlebury'},{n:'Dale LaVallee',role:'Driving Instructor',loc:'Willimantic'},{n:'Daniel Peilter',role:'Driving Instructor',loc:'Monroe'},
-{n:'Danielle Smith',role:'Driving Instructor',loc:'Middlebury'},{n:'David Callegari',role:'Driving Instructor',loc:'Torrington'},{n:'David Dymond',role:'Driving Instructor',loc:'Middlebury'},{n:'David Lombardi',role:'Instructor Squad Leader',loc:'Old Saybrook'},
-{n:'David Yachtis',role:'Driving Instructor',loc:'Monroe'},{n:'Donald Borsch',role:'Driving Instructor',loc:'Monroe'},{n:'Donald Brown',role:'Driving Instructor',loc:'Fairfield'},{n:'Douglas Patterson',role:'Driving Instructor',loc:'Fairfield'},
-{n:'Edward Green',role:'Licensing Guide',loc:'HQ'},{n:'Erica Chanda',role:'Support Squad Leader',loc:'HQ'},{n:'Ernest Reed III',role:'Driving Instructor',loc:'Monroe'},{n:'Evan Levene',role:'Driving Instructor',loc:'Old Saybrook'},
-{n:'Franklin Fountain',role:'Classroom Instructor',loc:'Fairfield'},{n:'Garrett Waldron',role:'Assoc. Dir. Business Dev.',loc:'HQ'},{n:'Gregory Chaisson',role:'Driving Instructor',loc:'Wallingford'},{n:'Hailey Bradley',role:'Driving Instructor',loc:'Farmington'},
-{n:'Harry Merty',role:'Driving Instructor',loc:'Worcester'},{n:'Heather Lamper',role:'Driving Instructor',loc:'Middlebury'},{n:'Ian Calandro-Bitjeman',role:'Driving Instructor',loc:'Glastonbury'},{n:'Jack Carrabine-Kirby',role:'Driving Instructor',loc:'Fairfield'},
-{n:'James Arrico',role:'Driving Instructor',loc:'Fairfield'},{n:'James Bickford',role:'Licensing Guide',loc:'HQ'},{n:'Jane Gillis',role:'Driving Instructor',loc:'Glastonbury'},{n:'Jascian Glass',role:'Driving Instructor',loc:'Enfield'},
-{n:'Jasmyn Baisden',role:'Driving Instructor',loc:'Middlebury'},{n:'Jason De La Cruz',role:'Fleet Tech',loc:'HQ'},{n:'Jason Summerfield',role:'Driving Instructor',loc:'Farmington'},{n:'Jayron Cayo',role:'Driving Instructor',loc:'Fairfield'},
-{n:'Jessicca Morgan',role:'Driving Instructor',loc:'Worcester'},{n:'Jodi Belmonte',role:'Internal Support',loc:'HQ'},{n:'John Bakula',role:'Driving Instructor',loc:'Farmington'},{n:'John Eigo',role:'Regional Manager',loc:'Southern CT'},
-{n:'John Leslie',role:'Driving Instructor',loc:'Monroe'},{n:'Jose Cereceda',role:'Classroom Instructor',loc:'Wallingford'},{n:'Jose DeGros',role:'Driving Instructor',loc:'Middlebury'},{n:'Juan Palma-Ocotl',role:'Driving Instructor',loc:'Farmington'},
-{n:'Julia Perugini',role:'Licensing Guide',loc:'HQ'},{n:'Julie Coburn',role:'Driving Instructor',loc:'Northampton'},{n:'Katherine Laviano',role:'Licensing Guide',loc:'HQ'},{n:'Katrina Strong',role:'Instructor Squad Leader',loc:'Torrington'},
-{n:'Kelly Ferguson',role:'Driving Instructor',loc:'Northampton'},{n:'Kendra Banks',role:'Licensing Guide',loc:'HQ'},{n:'Kerrianne Tellier',role:'Driving Instructor',loc:'Fairfield'},{n:'Kevin Wilkes',role:'Driving Instructor',loc:'Monroe'},
-{n:'Kim Nolin',role:'Driving Instructor',loc:'Wallingford'},{n:'Krystle Finke',role:'Completion Coordinator',loc:'HQ'},{n:'LeViticus Glover',role:'Licensing Guide',loc:'HQ'},{n:'Lee Solomon',role:'Driving Instructor',loc:'Springfield'},
-{n:'Leigh Buckens',role:'COO',loc:'HQ'},{n:'Lindsey Filakovsky',role:'Driving Instructor',loc:'Monroe'},{n:'Lisa Farnsworth',role:'Internal Support',loc:'HQ'},{n:'Lisa Gilmore',role:'Internal Support',loc:'HQ'},
-{n:'Louise Hughes',role:'Licensing Guide',loc:'HQ'},{n:'Louise Perugini',role:'Licensing Guide',loc:'HQ'},{n:'Marcia Fountain',role:'Classroom Instructor',loc:'Fairfield'},{n:'Mark Edwards',role:'Master Instructor',loc:'Monroe'},
-{n:'Matthew Johnson',role:'Driving Instructor',loc:'Farmington'},{n:'Matthew Larson',role:'Driving Instructor',loc:'Northampton'},{n:'Max Merise',role:'Driving Instructor',loc:'Old Saybrook'},{n:'Melissa Lopez',role:'Support Squad Leader',loc:'HQ'},
-{n:'Michael Davenport',role:'Master Instructor',loc:'Wallingford'},{n:'Michael Davis',role:'Driving Instructor',loc:'Middlebury'},{n:'Mika Fortier',role:'Driving Instructor',loc:'Middlebury'},{n:'Mike Santoro',role:'Regional Manager',loc:'Northern CT'},
-{n:'Mitchell Cantor',role:'Driving Instructor',loc:'Wallingford'},{n:'Naomi Macala',role:'Licensing Guide',loc:'HQ'},{n:'Nathan Taskin',role:'Driving Instructor',loc:'Glastonbury'},{n:'Nichole Snow',role:'Licensing Guide',loc:'HQ'},
-{n:'Opal Lamb',role:'Master Instructor',loc:'Fairfield'},{n:'Oscar Cruz',role:'Driving Instructor',loc:'Worcester'},{n:'Patricia Moody',role:'Driving Instructor',loc:'Monroe'},{n:'Paul Civitello',role:'Driving Instructor',loc:'Wallingford'},
-{n:'Peter Brigham',role:'Driving Instructor',loc:'Old Saybrook'},{n:'Rachel Quarello',role:'Driving Instructor',loc:'Monroe'},{n:'Raeanne Eichberger',role:'Driving Instructor',loc:'Wallingford'},{n:'Rita Clavet',role:'Driving Instructor',loc:'Wallingford'},
-{n:'Robert Boutilette',role:'Driving Instructor',loc:'Worcester'},{n:'Robert Watters',role:'Driving Instructor',loc:'Willimantic'},{n:'Robert Zaums',role:'Testing Host',loc:'HQ'},{n:'Ronald Parrs',role:'Instructor Squad Leader',loc:'Fairfield'},
-{n:'Ryah Mabasa-King',role:'Licensing Guide',loc:'HQ'},{n:'Samantha Cleveland',role:'Assoc. Dir. People',loc:'HQ'},{n:'Sandra Moore',role:'Driving Instructor',loc:'Monroe'},{n:'Sarah Phelan',role:'Instructor Squad Leader',loc:'Northampton'},
-{n:'Scott Wilson',role:'Driving Instructor',loc:'Wallingford'},{n:'Sean Lockwood',role:'Driving Instructor',loc:'Middlebury'},{n:'Stacie Desorbo',role:'Internal Support',loc:'HQ'},{n:'Stephen DiRocco',role:'Classroom Instructor',loc:'Fairfield'},
-{n:'Stephen Ronalter',role:'Driving Instructor',loc:'Northampton'},{n:'Susan Steeves',role:'Driving Instructor',loc:'Natick'},{n:'Susannah Yannaccone',role:'Support Squad Leader',loc:'HQ'},{n:'Tyler Begin',role:'Driving Instructor',loc:'Enfield'},
-{n:'Tyler Brown',role:'Driving Instructor',loc:'Glastonbury'},{n:'Tyler Stroup',role:'Classroom Instructor',loc:'Wallingford'},{n:'Viktoria Goja',role:'Assoc. Dir. Support',loc:'HQ'},{n:'William Mead',role:'Master Instructor',loc:'Monroe'}
-];
-function renderEmployeeList(filter){
-var el=document.getElementById('ee-list');if(!el)return;
-var q=(filter||'').toLowerCase();
-var filtered=TNS_EMPLOYEES.filter(function(e){return !q||e.n.toLowerCase().includes(q)||e.role.toLowerCase().includes(q)||e.loc.toLowerCase().includes(q);});
-if(!filtered.length){el.innerHTML='<div class="no-results">No employees match "'+q+'"</div>';return;}
-var groups={};filtered.forEach(function(e){var g=e.role;if(!groups[g])groups[g]=[];groups[g].push(e);});
-var order=['CEO','COO','Regional Manager','Assoc. Dir. Support','Assoc. Dir. People','Assoc. Dir. Business Dev.','Testing Host','Support Squad Leader','Instructor Squad Leader','Internal Support','Licensing Guide','Completion Coordinator','Fleet Tech','Master Instructor','Classroom Instructor','Driving Instructor'];
-var html='';order.forEach(function(g){if(!groups[g])return;
-html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;margin-top:12px;"><span style="font-size:10px;font-weight:700;color:#888;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">'+g+(groups[g].length>3?' ('+groups[g].length+')':'')+'</span><div style="flex:1;height:1px;background:#ddd;"></div></div>';
-groups[g].forEach(function(e){
-var color=g==='Regional Manager'||g==='CEO'||g==='COO'?'#F58A21':g.includes('Squad')||g.includes('Dir')?'#29A3BD':'#3B3B3B';
-html+='<div style="background:#fff;border:0.5px solid #eee;border-left:3px solid '+color+';border-radius:8px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:'+color+'15;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:'+color+';flex-shrink:0;">'+e.n.split(' ').map(function(w){return w[0];}).join('')+'</div><div><div style="font-size:14px;font-weight:600;color:#3B3B3B;">'+e.n+'</div><div style="font-size:12px;color:#666;margin-top:2px;">'+e.role+' · '+e.loc+'</div></div></div>';
-});});
-el.innerHTML=html;
-}
-function buildSelect(arr,placeholder){var o='<option value="">'+placeholder+'</option>';arr.forEach(function(n){o+='<option value="'+n+'">'+n+'</option>';});return o;}
-// FORM SUBMISSIONS
-var FORM_ENDPOINTS={refund:'',lead:'',escalation:''};
-function submitForm(e,type){
-  e.preventDefault();
-  var form=e.target,data={},els=form.elements;
-  for(var i=0;i<els.length;i++){if(els[i].name)data[els[i].name]=els[i].value;}
-  var resEl=document.getElementById(type+'-form-result');
-  var btn=form.querySelector('.form-submit');
-  btn.disabled=true;btn.textContent='Submitting...';
-  var endpoint=FORM_ENDPOINTS[type];
-  if(!endpoint){
-    // No endpoint configured — show success anyway for demo/testing
-    setTimeout(function(){
-      btn.disabled=false;
-      btn.textContent=type==='refund'?'Submit Refund Request':type==='lead'?'Submit New Lead':'Submit Escalation';
-      var colors=type==='refund'?['#F58A21','#C46D10']:type==='lead'?['#29A3BD','#1A7A96']:['#E24B4A','#A32D2D'];
-      resEl.innerHTML='<div class="form-success" style="border-color:'+colors[0]+';"><div class="form-success-icon">✓</div><div class="form-success-text" style="color:'+colors[1]+';">Submitted Successfully</div><div class="form-success-sub">Your '+type+' form has been recorded.<br>Configure your Microsoft Lists endpoint to enable live sync.</div></div>';
-      form.reset();
-      window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
-    },800);
-    return;
-  }
-  fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
-  .then(function(r){if(!r.ok)throw new Error('Server error');return r.json();})
-  .then(function(){
-    btn.disabled=false;
-    btn.textContent=type==='refund'?'Submit Refund Request':type==='lead'?'Submit New Lead':'Submit Escalation';
-    resEl.innerHTML='<div class="form-success"><div class="form-success-icon">✓</div><div class="form-success-text">Submitted Successfully</div><div class="form-success-sub">Your '+type+' form has been saved to Microsoft Lists.</div></div>';
-    form.reset();
-    window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
-  })
-  .catch(function(err){
-    btn.disabled=false;
-    btn.textContent=type==='refund'?'Submit Refund Request':type==='lead'?'Submit New Lead':'Submit Escalation';
-    resEl.innerHTML='<div class="co co-r" style="margin-top:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="12" cy="12" r="10" stroke="#E24B4A" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/></svg><span style="color:#A32D2D;">Submission failed: '+err.message+'. Please try again.</span></div>';
-  });
-}
 </script>
 </body>
 </html>
